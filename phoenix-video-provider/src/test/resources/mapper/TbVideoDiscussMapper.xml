@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="tb_video_discuss" >
+  <resultMap id="BaseResultMap" type="com.ginkgocap.ywxt.video.model.TbVideoDiscuss" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="video_id" property="videoId" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_video_discuss
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.ginkgocap.ywxt.video.model.TbVideoDiscuss" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_video_discuss (video_id, user_id,
+      content, create_time)
+    values (#{videoId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT},
+      #{content,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.ginkgocap.ywxt.video.model.TbVideoDiscuss" >
+    update tb_video_discuss
+    set video_id = #{videoId,jdbcType=BIGINT},
+      user_id = #{userId,jdbcType=BIGINT},
+      content = #{content,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select id, video_id, user_id, content, create_time
+    from tb_video_discuss
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAllByVideoIdCount" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select id, video_id, user_id, content, create_time
+    from tb_video_discuss
+    WHERE 1=1 AND video_id = #{videoId,jdbcType=BIGINT}
+    order by create_time desc limit #{startRow},#{pageSize}
+  </select>
+  <select id="selectAllByVideoId" resultType="Long" parameterType="java.util.Map" >
+    select COUNT(id)
+    from tb_video_discuss
+    WHERE 1=1 AND video_id = #{videoId,jdbcType=BIGINT}
+    order by create_time desc
+  </select>
+</mapper>

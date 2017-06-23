@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tb_video_attachment">
+  <resultMap id="BaseResultMap" type="com.ginkgocap.ywxt.video.model.TbVideoAttachment">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="file_name" jdbcType="VARCHAR" property="fileName" />
+    <result column="file_size" jdbcType="BIGINT" property="fileSize" />
+    <result column="file_type" jdbcType="VARCHAR" property="fileType" />
+    <result column="download_url" jdbcType="VARCHAR" property="downloadUrl" />
+    <result column="duration" jdbcType="BIGINT" property="duration" />
+    <result column="screenshot_url_a" jdbcType="VARCHAR" property="screenshotUrlA" />
+    <result column="screenshot_url_b" jdbcType="VARCHAR" property="screenshotUrlB" />
+    <result column="screenshot_url_c" jdbcType="VARCHAR" property="screenshotUrlC" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from tb_video_attachment
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.ginkgocap.ywxt.video.model.TbVideoAttachment" useGeneratedKeys="true" keyProperty="id">
+    insert into tb_video_attachment (file_name, file_size,
+      file_type, download_url, duration, 
+      screenshot_url_a, screenshot_url_b, screenshot_url_c, 
+      create_time)
+    values (#{fileName,jdbcType=VARCHAR}, #{fileSize,jdbcType=BIGINT},
+      #{fileType,jdbcType=VARCHAR}, #{downloadUrl,jdbcType=VARCHAR}, #{duration,jdbcType=BIGINT}, 
+      #{screenshotUrlA,jdbcType=VARCHAR}, #{screenshotUrlB,jdbcType=VARCHAR}, #{screenshotUrlC,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.ginkgocap.ywxt.video.model.TbVideoAttachment">
+    update tb_video_attachment
+    set file_name = #{fileName,jdbcType=VARCHAR},
+      file_size = #{fileSize,jdbcType=BIGINT},
+      file_type = #{fileType,jdbcType=VARCHAR},
+      download_url = #{downloadUrl,jdbcType=VARCHAR},
+      duration = #{duration,jdbcType=BIGINT},
+      screenshot_url_a = #{screenshotUrlA,jdbcType=VARCHAR},
+      screenshot_url_b = #{screenshotUrlB,jdbcType=VARCHAR},
+      screenshot_url_c = #{screenshotUrlC,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select id, file_name, file_size, file_type, download_url, duration, screenshot_url_a, 
+    screenshot_url_b, screenshot_url_c, create_time
+    from tb_video_attachment
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+</mapper>

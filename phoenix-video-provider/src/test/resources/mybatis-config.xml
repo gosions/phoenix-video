@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>  
+    <settings>
+        <setting name="cacheEnabled" value="true" />
+        <setting name="lazyLoadingEnabled" value="true" />  
+        <setting name="aggressiveLazyLoading" value="false" />  
+        <setting name="multipleResultSetsEnabled" value="true" />   
+        <setting name="useColumnLabel" value="true" />   
+        <setting name="autoMappingBehavior" value="FULL" />  
+    </settings>
+     <typeAliases>
+         <typeAlias alias="video" type="com.ginkgocap.ywxt.video.model.TbVideo" />
+         <typeAlias alias="videoPlay" type="com.ginkgocap.ywxt.video.model.TbVideoPlay" />
+         <typeAlias alias="videoDiscuss" type="com.ginkgocap.ywxt.video.model.TbVideoDiscuss" />
+         <typeAlias alias="videoEnshrine" type="com.ginkgocap.ywxt.video.model.TbVideoEnshrine" />
+         <typeAlias alias="videoLike" type="com.ginkgocap.ywxt.video.model.TbVideoLike" />
+         <typeAlias alias="videoReport" type="com.ginkgocap.ywxt.video.model.TbVideoReport" />
+         <typeAlias alias="videoShare" type="com.ginkgocap.ywxt.video.model.TbVideoShare" />
+         <typeAlias alias="ideoAttachment" type="com.ginkgocap.ywxt.video.model.TbVideoAttachment" />
+
+    </typeAliases>  
+    <mappers> 
+        <mapper resource="mapper/TbVideoMapper.xml" />
+        <mapper resource="mapper/TbVideoPlayMapper.xml" />
+        <mapper resource="mapper/TbVideoDiscussMapper.xml" />
+        <mapper resource="mapper/TbVideoEnshrineMapper.xml" />
+        <mapper resource="mapper/TbVideoLikeMapper.xml" />
+        <mapper resource="mapper/TbVideoReportMapper.xml" />
+        <mapper resource="mapper/TbVideoShareMapper.xml" />
+        <mapper resource="mapper/TbVideoAttachmentMapper.xml" />
+    </mappers>
+</configuration>

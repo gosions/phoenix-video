@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tb_video">
+  <resultMap id="BaseResultMap" type="com.ginkgocap.ywxt.video.model.TbVideo">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="tag" jdbcType="VARCHAR" property="tag" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="forbidden_reason" jdbcType="VARCHAR" property="forbiddenReason" />
+    <result column="top" jdbcType="TINYINT" property="top" />
+    <result column="like_time" jdbcType="BIGINT" property="likeTime" />
+    <result column="play_time" jdbcType="BIGINT" property="playTime" />
+    <result column="discuss_time" jdbcType="BIGINT" property="discussTime" />
+    <result column="attachment_id" jdbcType="BIGINT" property="attachmentId" />
+    <result column="transform_attachment_id" jdbcType="BIGINT" property="transformAttachmentId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+  </resultMap>
+
+  <insert id="insert" parameterType="com.ginkgocap.ywxt.video.model.TbVideo" useGeneratedKeys="true" keyProperty="id">
+    insert into tb_video (title, tag,
+    description, status, forbidden_reason, top,
+    like_time, play_time, discuss_time,
+    attachment_id, transform_attachment_id, create_time,
+    user_id)
+    values ( #{title,jdbcType=VARCHAR}, #{tag,jdbcType=VARCHAR},
+    #{description,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT},#{forbiddenReason,jdbcType=VARCHAR}, #{top,jdbcType=TINYINT},
+    #{likeTime,jdbcType=BIGINT}, #{playTime,jdbcType=BIGINT}, #{discussTime,jdbcType=BIGINT},
+    #{attachmentId,jdbcType=BIGINT}, #{transformAttachmentId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP},
+    #{userId,jdbcType=BIGINT})
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.ginkgocap.ywxt.video.model.TbVideo" >
+    update tb_video
+    set title = #{title,jdbcType=VARCHAR},
+    tag = #{tag,jdbcType=VARCHAR},
+    description = #{description,jdbcType=VARCHAR},
+    status = #{status,jdbcType=TINYINT},
+    forbidden_reason = #{forbiddenReason,jdbcType=VARCHAR},
+    top = #{top,jdbcType=TINYINT},
+    like_time = #{likeTime,jdbcType=BIGINT},
+    play_time = #{playTime,jdbcType=BIGINT},
+    discuss_time = #{discussTime,jdbcType=BIGINT},
+    attachment_id = #{attachmentId,jdbcType=BIGINT},
+    transform_attachment_id = #{transformAttachmentId,jdbcType=BIGINT},
+    user_id = #{userId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectSearchCount" resultType="Long" parameterType="java.util.Map" >
+    select COUNT(id)
+    from tb_video
+    <where>
+      <if test="id != null and id != ''">id = #{id}</if>
+      <if test="title != null and title != ''">AND title like CONCAT('%',#{title},'%')</if>
+      <if test="tag != null and tag != ''">AND tag like CONCAT('%',#{tag},'%')</if>
+      <if test="description != null and description != ''">AND description like CONCAT('%',#{description},'%')</if>
+      <if test="status != null and status != ''">AND status = #{status}</if>
+      <if test="forbidden_reason != null and forbidden_reason != ''">AND forbidden_reason like CONCAT('%',#{forbiddenReason},'%')</if>
+      <if test="top != null and top != ''">AND top = #{top}</if>
+      <if test="likeTime != null and likeTime != ''">AND like_time = #{likeTime}</if>
+      <if test="playTime != null and playTime != ''">AND play_time = #{playTime}</if>
+      <if test="discussTime != null and discussTime != ''">AND discuss_time = #{discussTime}</if>
+      <if test="createTime != null and createTime != ''">AND create_time = #{createTime}</if>
+      <if test="userId != null and userId != ''">AND user_id = #{userId}</if>
+      <if test="statusList !=null and statusList.size() > 0">
+        AND status IN
+        <foreach collection="statusList" item="statusitem"
+                 open="(" separator="," close=")">
+          #{statusitem}
+        </foreach>
+      </if>
+      <if test="startTime!=null and startTime!='' ">
+        AND <![CDATA[ create_time>=#{startTime} ]]>
+      </if>
+      <if test="endTime!=null and endTime!=''">
+        AND <![CDATA[ create_time<=#{endTime} ]]>
+      </if>
+    </where>
+    ORDER BY ${sortExp}
+  </select>
+  <select id="selectSearch" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select id, title, tag,description, status, top, like_time, play_time, discuss_time,attachment_id, transform_attachment_id, create_time, user_id
+    from tb_video
+    <where>
+      <if test="id != null and id != ''">id = #{id}</if>
+      <if test="title != null and title != ''">AND title like CONCAT('%',#{title},'%')</if>
+      <if test="tag != null and tag != ''">AND tag like CONCAT('%',#{tag},'%')</if>
+      <if test="description != null and description != ''">AND description like CONCAT('%',#{description},'%')</if>
+      <if test="status != null and status != ''">AND status = #{status}</if>
+      <if test="forbidden_reason != null and forbidden_reason != ''">AND forbidden_reason like CONCAT('%',#{forbiddenReason},'%')</if>
+      <if test="top != null and top != ''">AND top = #{top}</if>
+      <if test="likeTime != null and likeTime != ''">AND like_time = #{likeTime}</if>
+      <if test="playTime != null and playTime != ''">AND play_time = #{playTime}</if>
+      <if test="discussTime != null and discussTime != ''">AND discuss_time = #{discussTime}</if>
+      <if test="createTime != null and createTime != ''">AND create_time = #{createTime}</if>
+      <if test="userId != null and userId != ''">AND user_id = #{userId}</if>
+      <if test="statusList !=null and statusList.size() > 0">
+        AND status IN
+        <foreach collection="statusList" item="statusitem"
+                 open="(" separator="," close=")">
+          #{statusitem}
+        </foreach>
+      </if>
+      <if test="startTime!=null and startTime!='' ">
+        AND <![CDATA[ create_time>=#{startTime} ]]>
+      </if>
+      <if test="endTime!=null and endTime!=''">
+        AND <![CDATA[ create_time<=#{endTime} ]]>
+      </if>
+    </where>
+    ORDER BY ${sortExp}
+    limit #{startRow},#{pageSize}
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select id, title, tag,description, status, top, like_time, play_time, discuss_time,attachment_id, transform_attachment_id, create_time, user_id
+    from tb_video
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+</mapper>

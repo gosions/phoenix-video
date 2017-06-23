@@ -1,0 +1,53 @@
+package com.ginkgocap.ywxt.video.service.impl;
+
+import com.ginkgocap.ywxt.util.PageUtil;
+import com.ginkgocap.ywxt.video.dao.VideoShareDao;
+import com.ginkgocap.ywxt.video.model.TbVideoShare;
+import com.ginkgocap.ywxt.video.service.VideoShareService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Created by gintong on 2017/5/25.
+ */
+@Service("videoShareService")
+public class VideoShareServiceImpl implements VideoShareService {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    private VideoShareDao videoShareDao;
+
+
+    @Override
+    public TbVideoShare insertVideoShare(TbVideoShare tbVideoShare) {
+        return videoShareDao.insertVideoShare(tbVideoShare);
+    }
+
+    @Override
+    public TbVideoShare selectByPrimaryKey(Long id) {
+        return videoShareDao.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public Map<String, Object> selectAllByVideoId(Long videoId, int currentPage, int pageSize) {
+        long count = videoShareDao.selectAllByVideoIdCount(videoId);
+        PageUtil page = new PageUtil((int)count,currentPage,pageSize);
+        List<TbVideoShare> list = videoShareDao.selectAllByVideoId(videoId, page.getPageStartRow(), pageSize);
+        if(count<=0){
+            list=new ArrayList<TbVideoShare>();
+        }
+        //设置回复内容
+        Map<String, Object> result = new HashMap<String, Object>(2);
+        result.put("page", page);
+        result.put("results", list);
+        return result;
+    }
+}
