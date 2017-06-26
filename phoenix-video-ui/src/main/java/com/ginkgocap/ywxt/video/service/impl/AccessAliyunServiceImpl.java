@@ -19,6 +19,7 @@ import com.aliyuncs.profile.IClientProfile;
 import com.aliyuncs.sts.model.v20150401.AssumeRoleRequest;
 import com.aliyuncs.sts.model.v20150401.AssumeRoleResponse;
 import com.aliyuncs.vod.model.v20170321.*;
+import com.ginkgocap.ywxt.video.dto.VideoDTO;
 import com.ginkgocap.ywxt.video.model.TbVideo;
 import com.ginkgocap.ywxt.video.service.AccessAliyunService;
 import com.ginkgocap.ywxt.video.utils.oss.OSSConfigure;
@@ -159,6 +160,33 @@ public class AccessAliyunServiceImpl implements AccessAliyunService {
         GetVideoInfoRequest req = new GetVideoInfoRequest();
         req.setVideoId(videoId);
         GetVideoInfoResponse res = null;
+        try {
+            res = vodClient.getAcsResponse(req);
+        } catch (ServerException e) {
+            throw new RuntimeException("GetVideoInfoRequest Server failed");
+        } catch (ClientException e) {
+            throw new RuntimeException("GetVideoInfoRequest Client failed");
+        }
+        LOGGER.info("获取视频信息,response={}", JSON.toJSONString(res));
+        return res;
+    }
+
+    /**
+     * 阿里云 视频点播 修改视频信息
+     *
+     * @param videoDTO
+     * @return
+     */
+    @Override
+    public UpdateVideoInfoResponse updateVideoInfo(VideoDTO videoDTO) {
+        UpdateVideoInfoRequest req = new UpdateVideoInfoRequest();
+        req.setVideoId(videoDTO.getAliyunVideoId());
+        req.setCoverURL(videoDTO.getCoverURL());
+      //  req.setCateId(videoDTO.getCateId().intValue());
+        req.setDescription(videoDTO.getDescription());
+        req.setTags(videoDTO.getTag());
+        req.setTitle(videoDTO.getTitle());
+        UpdateVideoInfoResponse res = null;
         try {
             res = vodClient.getAcsResponse(req);
         } catch (ServerException e) {

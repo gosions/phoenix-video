@@ -47,7 +47,8 @@ public class TbVideoAttachment implements Serializable {
     /**
      * 视频时长
      */
-    private Long duration;
+    @Column(name = "duration")
+    private Float duration;
 
     /**
      * 视频截图1
@@ -181,7 +182,7 @@ public class TbVideoAttachment implements Serializable {
      *
      * @return duration - 视频时长
      */
-    public Long getDuration() {
+    public Float getDuration() {
         return duration;
     }
 
@@ -190,7 +191,7 @@ public class TbVideoAttachment implements Serializable {
      *
      * @param duration 视频时长
      */
-    public void setDuration(Long duration) {
+    public void setDuration(Float duration) {
         this.duration = duration;
     }
 

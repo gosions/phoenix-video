@@ -2,9 +2,11 @@ package com.ginkgocap.ywxt.video.controller;
 
 import com.alibaba.dubbo.common.json.JSON;
 import com.aliyuncs.vod.model.v20170321.GetVideoInfoResponse;
+import com.aliyuncs.vod.model.v20170321.UpdateVideoInfoResponse;
 import com.ginkgocap.ywxt.video.constant.MediaTypes;
 import com.ginkgocap.ywxt.video.constant.VideoStatusType;
 import com.ginkgocap.ywxt.video.dto.AuditingForbiddenDTO;
+import com.ginkgocap.ywxt.video.dto.VideoDTO;
 import com.ginkgocap.ywxt.video.model.*;
 import com.ginkgocap.ywxt.video.service.*;
 import com.ginkgocap.ywxt.video.utils.QueryReqBean;
@@ -233,6 +235,35 @@ public class VideoContraller extends BaseController{
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         }
         tbVideo.setStatus(VideoStatusType.delete_audit.getKey());
+        TbVideo updateVideo = videoService.updateVideo(tbVideo);
+        if(null != updateVideo) {
+            return InterfaceResult.getSuccessInterfaceResultInstance(tbVideo);
+        }
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION);
+    }
+
+    @ApiOperation(value = "编辑视频", notes = "编辑视频封面、标题、描述、标签等")
+    @ApiImplicitParam(name = "videoDTO", value = "详细实体videoDTO", required = true, dataType = "VideoDTO")
+    @RequestMapping(value = { "/editVideo.json" }, method = { RequestMethod.POST })
+    public InterfaceResult editVideo(@RequestBody VideoDTO videoDTO, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        LOGGER.info("编辑视频", JSON.json(videoDTO));
+        //校验参数合法性
+        ValidationResult validationResult = ValidationUtils.validateEntity(videoDTO);
+        if(validationResult.isHasErrors()) {
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION, validationResult);
+        }
+        TbVideo tbVideo = videoService.selectByPrimaryKey(videoDTO.getVideoId());
+        if(null == tbVideo) {
+            LOGGER.error("视频不存在");
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
+        }
+        //同步更新阿里云的 视频详情
+        accessAliyunService.updateVideoInfo(videoDTO);
+        GetVideoInfoResponse videoInfo = accessAliyunService.getVideoInfo(videoDTO.getAliyunVideoId());
+        tbVideo.setTag(videoDTO.getTag());//视频标签
+        tbVideo.setTitle(videoDTO.getTitle());//视频标题
+        tbVideo.setDescription(videoDTO.getDescription());//视频描述
+        tbVideo.getAttachment().setDuration(videoInfo.getVideo().getDuration());
         TbVideo updateVideo = videoService.updateVideo(tbVideo);
         if(null != updateVideo) {
             return InterfaceResult.getSuccessInterfaceResultInstance(tbVideo);

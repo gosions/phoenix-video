@@ -92,6 +92,9 @@ public class VideoDaoImpl extends SqlSessionDaoSupport implements VideoDao{
     public TbVideo updateVideo(TbVideo tbVideo) {
         int update = getSqlSession().update("tb_video.updateByPrimaryKey", tbVideo);
         if(update > 0) {
+            if(null != tbVideo.getAttachment()) {
+                videoAttachmentDao.updateByPrimaryKey(tbVideo.getAttachment());
+            }
             return selectByPrimaryKey(tbVideo.getId());
         }
         return new TbVideo();

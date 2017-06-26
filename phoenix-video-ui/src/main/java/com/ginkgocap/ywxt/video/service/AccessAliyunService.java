@@ -4,10 +4,8 @@ import com.aliyun.mns.client.CloudQueue;
 import com.aliyun.mns.model.Message;
 import com.aliyuncs.mts.model.v20140618.QueryMediaWorkflowListResponse;
 import com.aliyuncs.sts.model.v20150401.AssumeRoleResponse;
-import com.aliyuncs.vod.model.v20170321.CreateUploadVideoResponse;
-import com.aliyuncs.vod.model.v20170321.GetVideoInfoResponse;
-import com.aliyuncs.vod.model.v20170321.GetVideoPlayAuthResponse;
-import com.aliyuncs.vod.model.v20170321.RefreshUploadVideoResponse;
+import com.aliyuncs.vod.model.v20170321.*;
+import com.ginkgocap.ywxt.video.dto.VideoDTO;
 import com.ginkgocap.ywxt.video.model.TbVideo;
 
 /**
@@ -42,6 +40,14 @@ public interface AccessAliyunService {
      * @return
      */
     GetVideoInfoResponse getVideoInfo(String videoId);
+
+    /**
+     * 阿里云 视频点播 修改视频信息
+     * @param videoDTO
+     * @return
+     */
+    UpdateVideoInfoResponse updateVideoInfo(VideoDTO videoDTO);
+
 
     /**
      * 阿里云oss方式上传文件 获取安全令牌
