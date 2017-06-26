@@ -190,11 +190,33 @@ public class AccessAliyunServiceImpl implements AccessAliyunService {
         try {
             res = vodClient.getAcsResponse(req);
         } catch (ServerException e) {
-            throw new RuntimeException("GetVideoInfoRequest Server failed");
+            throw new RuntimeException("UpdateVideoInfoRequest Server failed");
         } catch (ClientException e) {
-            throw new RuntimeException("GetVideoInfoRequest Client failed");
+            throw new RuntimeException("UpdateVideoInfoRequest Client failed");
         }
         LOGGER.info("获取视频信息,response={}", JSON.toJSONString(res));
+        return res;
+    }
+
+    /**
+     * 阿里云 视频点播 删除视频
+     *
+     * @param videoIds 视频ID列表，多个用逗号分隔，最多支持10个
+     * @return
+     */
+    @Override
+    public DeleteVideoResponse deleteVideo(String videoIds) {
+        DeleteVideoRequest req = new DeleteVideoRequest();
+        req.setVideoIds(videoIds);
+        DeleteVideoResponse res = null;
+        try {
+            res = vodClient.getAcsResponse(req);
+        } catch (ServerException e) {
+            throw new RuntimeException("DeleteVideoRequest Server failed");
+        } catch (ClientException e) {
+            throw new RuntimeException("DeleteVideoRequest Client failed");
+        }
+        LOGGER.info("删除视频信息,response={}", JSON.toJSONString(res));
         return res;
     }
 

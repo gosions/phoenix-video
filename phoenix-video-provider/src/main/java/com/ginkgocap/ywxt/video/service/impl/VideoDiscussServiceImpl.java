@@ -1,9 +1,9 @@
 package com.ginkgocap.ywxt.video.service.impl;
 
-import com.ginkgocap.ywxt.util.PageUtil;
 import com.ginkgocap.ywxt.video.dao.VideoDiscussDao;
 import com.ginkgocap.ywxt.video.model.TbVideoDiscuss;
 import com.ginkgocap.ywxt.video.service.VideoDiscussService;
+import com.ginkgocap.ywxt.video.utils.PageUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +41,7 @@ public class VideoDiscussServiceImpl implements VideoDiscussService {
         logger.info("获取视频评论列表,videoId={},currentPage={},pageSize={}", videoId, currentPage, pageSize);
         long count = videoDiscussDao.selectAllByVideoIdCount(videoId);
         PageUtil page = new PageUtil((int)count,currentPage,pageSize);
+
         List<TbVideoDiscuss> list = videoDiscussDao.selectAllByVideoId(videoId, page.getPageStartRow(), pageSize);
         if(count<=0){
             list=new ArrayList<TbVideoDiscuss>(pageSize);

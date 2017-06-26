@@ -33,5 +33,6 @@
 	<import resource="classpath:video-spring-context.xml" />
 	<import resource="classpath:video-dubbo-config.xml" />
 	<import resource="classpath:video-dubbo-provider.xml" />
+	<import resource="classpath:user-dubbo-consumer.xml" />
 
 </beans>

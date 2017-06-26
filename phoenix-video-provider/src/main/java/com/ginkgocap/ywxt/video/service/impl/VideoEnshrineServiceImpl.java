@@ -1,9 +1,9 @@
 package com.ginkgocap.ywxt.video.service.impl;
 
-import com.ginkgocap.ywxt.util.PageUtil;
 import com.ginkgocap.ywxt.video.dao.VideoEnshrineDao;
 import com.ginkgocap.ywxt.video.model.TbVideoEnshrine;
 import com.ginkgocap.ywxt.video.service.VideoEnshrineService;
+import com.ginkgocap.ywxt.video.utils.PageUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

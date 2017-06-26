@@ -48,6 +48,12 @@ public interface AccessAliyunService {
      */
     UpdateVideoInfoResponse updateVideoInfo(VideoDTO videoDTO);
 
+    /**
+     * 阿里云 视频点播 删除视频
+     * @param videoIds 视频ID列表，多个用逗号分隔，最多支持10个
+     * @return
+     */
+    DeleteVideoResponse deleteVideo(String videoIds);
 
     /**
      * 阿里云oss方式上传文件 获取安全令牌

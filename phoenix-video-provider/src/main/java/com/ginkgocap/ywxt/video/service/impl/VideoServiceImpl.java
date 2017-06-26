@@ -1,10 +1,11 @@
 package com.ginkgocap.ywxt.video.service.impl;
 
 import com.alibaba.druid.util.StringUtils;
-import com.ginkgocap.ywxt.util.PageUtil;
+import com.ginkgocap.ywxt.user.service.UserService;
 import com.ginkgocap.ywxt.video.dao.VideoDao;
 import com.ginkgocap.ywxt.video.model.TbVideo;
 import com.ginkgocap.ywxt.video.service.VideoService;
+import com.ginkgocap.ywxt.video.utils.PageUtil;
 import com.ginkgocap.ywxt.video.utils.QueryReqBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,8 @@ public class VideoServiceImpl implements VideoService {
 
     @Autowired
     private VideoDao videoDao;
+    @Autowired
+    private UserService userService;
 
     @Override
     public TbVideo insertVideo(TbVideo tbVideo) {
@@ -56,6 +59,9 @@ public class VideoServiceImpl implements VideoService {
         mapParam.put("startRow", page.getPageStartRow());
         mapParam.put("pageSize", page.getPageSize());
         List<TbVideo> list = videoDao.selectSearch(mapParam);
+        for (TbVideo temp:list) {
+            temp.setUser(userService.findUserByUserId(temp.getUserId()));
+        }
         if(count<=0){
             list=new ArrayList<TbVideo>();
         }

@@ -1,5 +1,7 @@
 package com.ginkgocap.ywxt.video.model;
 
+import com.ginkgocap.ywxt.user.model.User;
+
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
@@ -20,6 +22,9 @@ public class TbVideoDiscuss implements Serializable {
      */
     @Column(name = "user_id")
     private Long userId;
+
+    @Transient
+    private User user;
 
     /**
      * 评论内容
@@ -121,5 +126,13 @@ public class TbVideoDiscuss implements Serializable {
      */
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

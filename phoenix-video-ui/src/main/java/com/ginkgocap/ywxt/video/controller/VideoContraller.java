@@ -48,25 +48,29 @@ public class VideoContraller extends BaseController{
     @RequestMapping(value = { "/addVideo.json" }, method = { RequestMethod.PUT })
     public InterfaceResult addVideo(@RequestBody TbVideo tbVideo, HttpServletRequest request, HttpServletResponse response) throws IOException {
         LOGGER.info("创建视频,tbVideo={}", JSON.json(tbVideo));
-        if(null == tbVideo) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
-        }
-        //校验参数合法性
-        ValidationResult validationResult = ValidationUtils.validateEntity(tbVideo);
-        if(validationResult.isHasErrors()) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION, validationResult);
-        }
-        if(null != tbVideo.getAttachment()) {
-            validationResult = ValidationUtils.validateEntity(tbVideo.getAttachment());
-            if(validationResult.isHasErrors()) {
+        try {
+            if (null == tbVideo) {
+                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_NULL_EXCEPTION);
+            }
+            //校验参数合法性
+            ValidationResult validationResult = ValidationUtils.validateEntity(tbVideo);
+            if (validationResult.isHasErrors()) {
                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION, validationResult);
             }
+            if (null != tbVideo.getAttachment()) {
+                validationResult = ValidationUtils.validateEntity(tbVideo.getAttachment());
+                if (validationResult.isHasErrors()) {
+                    return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION, validationResult);
+                }
+            }
+            TbVideo insertVideo = videoService.insertVideo(tbVideo);
+            if (null != insertVideo) {
+                return InterfaceResult.getSuccessInterfaceResultInstance(insertVideo);
+            }
+        } catch (Exception e) {
+            LOGGER.error("创建视频异常,{}", e);
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION);
         }
-        TbVideo insertVideo = videoService.insertVideo(tbVideo);
-        if(null != insertVideo) {
-            return InterfaceResult.getSuccessInterfaceResultInstance(insertVideo);
-        }
-
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION);
     }
 
@@ -75,17 +79,22 @@ public class VideoContraller extends BaseController{
     @RequestMapping(value = { "/getVideos.json" }, method = { RequestMethod.POST }, produces = MediaTypes.JSON_UTF_8)
     public InterfaceResult getVideos(@RequestBody QueryReqBean queryReqBean, HttpServletRequest request, HttpServletResponse response){
         LOGGER.info("获取视频列表,queryReqBean={}", queryReqBean.toString());
-        //校验参数合法性
-        ValidationResult validationResult = ValidationUtils.validateEntity(queryReqBean);
-        if(validationResult.isHasErrors()) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION, validationResult);
+        try {
+            //校验参数合法性
+            ValidationResult validationResult = ValidationUtils.validateEntity(queryReqBean);
+            if (validationResult.isHasErrors()) {
+                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION, validationResult);
+            }
+            validationResult = ValidationUtils.validateEntity(queryReqBean.getPageParameter());
+            if (validationResult.isHasErrors()) {
+                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION, validationResult);
+            }
+            Map<String, Object> result = videoService.selectSearchPage(queryReqBean);
+            return InterfaceResult.getSuccessInterfaceResultInstance(result);
+        } catch (Exception e) {
+            LOGGER.error("获取视频列表异常，{}",e);
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION);
         }
-        validationResult = ValidationUtils.validateEntity(queryReqBean.getPageParameter());
-        if(validationResult.isHasErrors()) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION, validationResult);
-        }
-        Map<String, Object> result = videoService.selectSearchPage(queryReqBean);
-        return InterfaceResult.getSuccessInterfaceResultInstance(result);
     }
 
     @ApiOperation(value = "查询视频信息", notes = "返回视频的详细信息")
@@ -93,16 +102,21 @@ public class VideoContraller extends BaseController{
     @RequestMapping(value = { "/getVideo/{id}" }, method = { RequestMethod.GET }, produces = MediaTypes.JSON_UTF_8)
     public InterfaceResult getVideoById(@PathVariable("id") Long id,
                                         HttpServletRequest request, HttpServletResponse response) {
-        LOGGER.info("id={},获取视频",id);
-        Map<String, Object> result = new HashMap<>(2);
-        GetVideoInfoResponse.Video videoInfo = null;
-        TbVideo tbVideo = videoService.selectByPrimaryKey(id);
-        result.put("tbVideo", tbVideo);
-        if(null != tbVideo && null != tbVideo.getAttachment() && null != tbVideo.getAttachment().getAliyunVideoId()) {
-            videoInfo = accessAliyunService.getVideoInfo(tbVideo.getAttachment().getAliyunVideoId()).getVideo();
-            tbVideo.getAttachment().setAliyunVideo(videoInfo);
+        LOGGER.info("id={},获取视频", id);
+        try {
+            Map<String, Object> result = new HashMap<>(2);
+            GetVideoInfoResponse.Video videoInfo = null;
+            TbVideo tbVideo = videoService.selectByPrimaryKey(id);
+            result.put("tbVideo", tbVideo);
+            if (null != tbVideo && null != tbVideo.getAttachment() && null != tbVideo.getAttachment().getAliyunVideoId()) {
+                videoInfo = accessAliyunService.getVideoInfo(tbVideo.getAttachment().getAliyunVideoId()).getVideo();
+                tbVideo.getAttachment().setAliyunVideo(videoInfo);
+            }
+            return InterfaceResult.getSuccessInterfaceResultInstance(result);
+        } catch (Exception e) {
+            LOGGER.error("获取视频异常，{}",e);
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION);
         }
-        return InterfaceResult.getSuccessInterfaceResultInstance(result);
     }
 
     @ApiOperation(value = "视频审核通过", notes = "视频状态由为审核变为正常")
@@ -229,15 +243,23 @@ public class VideoContraller extends BaseController{
     @RequestMapping(value = { "/deleteVideo/{id}" }, method = { RequestMethod.DELETE })
     public InterfaceResult VideoById(@PathVariable("id") Long id, HttpServletRequest request, HttpServletResponse response) {
         LOGGER.info("id={},删除视频",id);
-        TbVideo tbVideo = videoService.selectByPrimaryKey(id);
-        if(null == tbVideo) {
-            LOGGER.error("删除视频,视频不存在,id={}",id);
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
-        }
-        tbVideo.setStatus(VideoStatusType.delete_audit.getKey());
-        TbVideo updateVideo = videoService.updateVideo(tbVideo);
-        if(null != updateVideo) {
-            return InterfaceResult.getSuccessInterfaceResultInstance(tbVideo);
+        try {
+            TbVideo tbVideo = videoService.selectByPrimaryKey(id);
+            if (null == tbVideo) {
+                LOGGER.error("删除视频,视频不存在,id={}", id);
+                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
+            }
+            tbVideo.setStatus(VideoStatusType.delete_audit.getKey());
+            TbVideo updateVideo = videoService.updateVideo(tbVideo);
+            //阿里云同步删除
+            accessAliyunService.deleteVideo(tbVideo.getAttachment().getAliyunVideoId());
+
+            if (null != updateVideo) {
+                return InterfaceResult.getSuccessInterfaceResultInstance(tbVideo);
+            }
+        } catch (Exception e) {
+            LOGGER.error("删除视频异常，{}", e);
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION);
         }
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION);
     }
@@ -263,25 +285,12 @@ public class VideoContraller extends BaseController{
         tbVideo.setTag(videoDTO.getTag());//视频标签
         tbVideo.setTitle(videoDTO.getTitle());//视频标题
         tbVideo.setDescription(videoDTO.getDescription());//视频描述
-        tbVideo.getAttachment().setDuration(videoInfo.getVideo().getDuration());
+        tbVideo.setDuration(videoInfo.getVideo().getDuration());//视频时长
         TbVideo updateVideo = videoService.updateVideo(tbVideo);
         if(null != updateVideo) {
             return InterfaceResult.getSuccessInterfaceResultInstance(tbVideo);
         }
         return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

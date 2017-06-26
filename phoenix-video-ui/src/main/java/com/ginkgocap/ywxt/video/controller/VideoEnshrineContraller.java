@@ -62,15 +62,20 @@ public class VideoEnshrineContraller extends BaseController{
             @ApiImplicitParam(name = "videoId", value = "视频id", required = true, dataType  = "Long"),
             @ApiImplicitParam(name = "currentPage", value = "当前页数", required = true, dataType  = "int"),
             @ApiImplicitParam(name = "pageSize", value = "每页个数", required = true, dataType  = "int")})
-    @RequestMapping(value = { "/{videoId}/{currentPage}/{pageSize}" }, method = { RequestMethod.GET })
+    @RequestMapping(value = { "/video/{videoId}/{currentPage}/{pageSize}" }, method = { RequestMethod.GET })
     public InterfaceResult getVideosByVideo(
             @PathVariable("videoId") Long videoId,
             @PathVariable("currentPage") int currentPage,
             @PathVariable("pageSize") int pageSize,
             HttpServletRequest request, HttpServletResponse response) {
         LOGGER.info("根据视频id获取视频收藏列表,videoId={},currentPage={},pageSize={}", videoId, currentPage, pageSize);
-        Map<String, Object> stringObjectMap = videoEnshrineService.selectAllByVideoId(videoId, currentPage, pageSize);
-        return InterfaceResult.getSuccessInterfaceResultInstance(stringObjectMap);
+        try {
+            Map<String, Object> stringObjectMap = videoEnshrineService.selectAllByVideoId(videoId, currentPage, pageSize);
+            return InterfaceResult.getSuccessInterfaceResultInstance(stringObjectMap);
+        } catch (Exception e) {
+            LOGGER.error("根据视频id获取视频收藏列表异常,{}", e);
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION);
+        }
     }
 
     @ApiOperation(value="根据收藏用户id获取视频收藏列表", notes="")
@@ -78,20 +83,25 @@ public class VideoEnshrineContraller extends BaseController{
             @ApiImplicitParam(name = "userId", value = "用户id", required = true, dataType  = "Long"),
             @ApiImplicitParam(name = "currentPage", value = "当前页数", required = true, dataType  = "int"),
             @ApiImplicitParam(name = "pageSize", value = "每页个数", required = true, dataType  = "int")})
-    @RequestMapping(value = { "/{userId}/{currentPage}/{pageSize}" }, method = { RequestMethod.GET })
+    @RequestMapping(value = { "/user/{userId}/{currentPage}/{pageSize}" }, method = { RequestMethod.GET })
     public InterfaceResult getVideosByUser(
             @PathVariable("userId") Long userId,
             @PathVariable("currentPage") int currentPage,
             @PathVariable("pageSize") int pageSize,
             HttpServletRequest request, HttpServletResponse response) {
         LOGGER.info("根据收藏用户id获取视频收藏列表,userId={},currentPage={},pageSize={}", userId, currentPage, pageSize);
-        Map<String, Object> stringObjectMap = videoEnshrineService.selectAllByUserId(userId, currentPage, pageSize);
-        List<TbVideoEnshrine> list = (List<TbVideoEnshrine>)stringObjectMap.get("results");
-        for (TbVideoEnshrine temp: list) {
-            if(null != temp.getVideo() && null != temp.getVideo().getAttachment() && null != temp.getVideo().getAttachment().getAliyunVideoId()) {
-                temp.getVideo().getAttachment().setAliyunVideo(accessAliyunService.getVideoInfo(temp.getVideo().getAttachment().getAliyunVideoId()).getVideo());
+        try {
+            Map<String, Object> stringObjectMap = videoEnshrineService.selectAllByUserId(userId, currentPage, pageSize);
+            List<TbVideoEnshrine> list = (List<TbVideoEnshrine>) stringObjectMap.get("results");
+            for (TbVideoEnshrine temp : list) {
+                if (null != temp.getVideo() && null != temp.getVideo().getAttachment() && null != temp.getVideo().getAttachment().getAliyunVideoId()) {
+                    temp.getVideo().getAttachment().setAliyunVideo(accessAliyunService.getVideoInfo(temp.getVideo().getAttachment().getAliyunVideoId()).getVideo());
+                }
             }
+            return InterfaceResult.getSuccessInterfaceResultInstance(stringObjectMap);
+        } catch (Exception e) {
+            LOGGER.error("根据收藏用户id获取视频收藏列表,{}", e);
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION);
         }
-        return InterfaceResult.getSuccessInterfaceResultInstance(stringObjectMap);
     }
 }

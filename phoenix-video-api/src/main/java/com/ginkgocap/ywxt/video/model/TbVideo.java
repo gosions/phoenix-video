@@ -1,5 +1,6 @@
 package com.ginkgocap.ywxt.video.model;
 
+import com.ginkgocap.ywxt.user.model.User;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import java.io.Serializable;
@@ -65,6 +66,12 @@ public class TbVideo implements Serializable{
     private Long discussTime=0L;
 
     /**
+     * 视频时长
+     */
+    @Column(name = "duration")
+    private Float duration=Float.parseFloat("0.00");
+
+    /**
      * 原视频附件
      */
     @Column(name = "attachment_id")
@@ -93,6 +100,9 @@ public class TbVideo implements Serializable{
      */
     @Column(name = "user_id")
     private Long userId;
+
+    @Transient
+    private User user;
 
     public TbVideo() {
     }
@@ -353,5 +363,21 @@ public class TbVideo implements Serializable{
 
     public void setForbiddenReason(String forbiddenReason) {
         this.forbiddenReason = forbiddenReason;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Float getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Float duration) {
+        this.duration = duration;
     }
 }

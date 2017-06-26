@@ -7,7 +7,6 @@
     <result column="file_size" jdbcType="BIGINT" property="fileSize" />
     <result column="file_type" jdbcType="VARCHAR" property="fileType" />
     <result column="download_url" jdbcType="VARCHAR" property="downloadUrl" />
-    <result column="duration" jdbcType="FLOAT" property="duration" />
     <result column="screenshot_url_a" jdbcType="VARCHAR" property="screenshotUrlA" />
     <result column="screenshot_url_b" jdbcType="VARCHAR" property="screenshotUrlB" />
     <result column="screenshot_url_c" jdbcType="VARCHAR" property="screenshotUrlC" />
@@ -20,11 +19,11 @@
   </delete>
   <insert id="insert" parameterType="com.ginkgocap.ywxt.video.model.TbVideoAttachment" useGeneratedKeys="true" keyProperty="id">
     insert into tb_video_attachment (file_name, file_size,
-      file_type, download_url, duration, 
+      file_type, download_url,
       screenshot_url_a, screenshot_url_b, screenshot_url_c, 
       create_time, aliyun_video_id)
     values (#{fileName,jdbcType=VARCHAR}, #{fileSize,jdbcType=BIGINT},
-      #{fileType,jdbcType=VARCHAR}, #{downloadUrl,jdbcType=VARCHAR}, #{duration,jdbcType=FLOAT},
+      #{fileType,jdbcType=VARCHAR}, #{downloadUrl,jdbcType=VARCHAR},
       #{screenshotUrlA,jdbcType=VARCHAR}, #{screenshotUrlB,jdbcType=VARCHAR}, #{screenshotUrlC,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{aliyunVideoId,jdbcType=VARCHAR})
   </insert>
@@ -34,7 +33,6 @@
       file_size = #{fileSize,jdbcType=BIGINT},
       file_type = #{fileType,jdbcType=VARCHAR},
       download_url = #{downloadUrl,jdbcType=VARCHAR},
-      duration = #{duration,jdbcType=FLOAT},
       screenshot_url_a = #{screenshotUrlA,jdbcType=VARCHAR},
       screenshot_url_b = #{screenshotUrlB,jdbcType=VARCHAR},
       screenshot_url_c = #{screenshotUrlC,jdbcType=VARCHAR},
@@ -43,7 +41,7 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectByPrimaryKey" parameterType="java.util.Map" resultMap="BaseResultMap">
-    select id, file_name, file_size, file_type, download_url, duration, screenshot_url_a, 
+    select id, file_name, file_size, file_type, download_url, screenshot_url_a,
     screenshot_url_b, screenshot_url_c, create_time, aliyun_video_id
     from tb_video_attachment
     where id = #{id,jdbcType=BIGINT}

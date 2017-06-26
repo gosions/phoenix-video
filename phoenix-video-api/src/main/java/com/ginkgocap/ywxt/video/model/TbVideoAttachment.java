@@ -45,12 +45,6 @@ public class TbVideoAttachment implements Serializable {
     private String downloadUrl;
 
     /**
-     * 视频时长
-     */
-    @Column(name = "duration")
-    private Float duration;
-
-    /**
      * 视频截图1
      */
     @Column(name = "screenshot_url_a")
@@ -175,24 +169,6 @@ public class TbVideoAttachment implements Serializable {
      */
     public void setDownloadUrl(String downloadUrl) {
         this.downloadUrl = downloadUrl == null ? null : downloadUrl.trim();
-    }
-
-    /**
-     * 获取视频时长
-     *
-     * @return duration - 视频时长
-     */
-    public Float getDuration() {
-        return duration;
-    }
-
-    /**
-     * 设置视频时长
-     *
-     * @param duration 视频时长
-     */
-    public void setDuration(Float duration) {
-        this.duration = duration;
     }
 
     /**

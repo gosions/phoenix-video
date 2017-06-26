@@ -1,9 +1,9 @@
 package com.ginkgocap.ywxt.video.service.impl;
 
-import com.ginkgocap.ywxt.util.PageUtil;
 import com.ginkgocap.ywxt.video.dao.VideoReportDao;
 import com.ginkgocap.ywxt.video.model.TbVideoReport;
 import com.ginkgocap.ywxt.video.service.VideoReportService;
+import com.ginkgocap.ywxt.video.utils.PageUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,7 @@ public class VideoReportServiceImpl implements VideoReportService {
 
         long count = videoReportDao.selectAllByVideoIdCount(videoId);
         PageUtil page = new PageUtil((int)count,currentPage,pageSize);
-        List<TbVideoReport> list = videoReportDao.selectAllByVideoId(videoId, page.getPageStartRow(), pageSize);
+        List<TbVideoReport> list = videoReportDao.selectAllByVideoId(videoId, page.getPageStartRow() , pageSize);
         if(count<=0){
             list=new ArrayList<TbVideoReport>();
         }

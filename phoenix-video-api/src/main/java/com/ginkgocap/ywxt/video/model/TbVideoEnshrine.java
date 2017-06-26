@@ -1,5 +1,7 @@
 package com.ginkgocap.ywxt.video.model;
 
+import com.ginkgocap.ywxt.user.model.User;
+
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -29,6 +31,9 @@ public class TbVideoEnshrine implements Serializable {
      */
     @Column(name = "user_id")
     private Long userId;
+
+    @Transient
+    private User user;
 
     /**
      * 创建时间
@@ -115,5 +120,13 @@ public class TbVideoEnshrine implements Serializable {
 
     public void setVideo(TbVideo video) {
         this.video = video;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

@@ -1,8 +1,11 @@
 package com.ginkgocap.ywxt.video.model;
 
+import com.ginkgocap.ywxt.user.model.User;
+
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -22,6 +25,9 @@ public class TbVideoPlay implements Serializable {
      */
     @Column(name = "user_id")
     private Long userId;
+
+    @Transient
+    private User user;
 
     /**
      * 播放时长
@@ -124,5 +130,13 @@ public class TbVideoPlay implements Serializable {
      */
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

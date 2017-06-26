@@ -140,22 +140,28 @@ public class AccessAliyunContraller {
     @ApiOperation(value = "获取视频上传凭证和地址", notes = "视频点播方式")
     @RequestMapping(value = { "/createUploadVideo" }, method = { RequestMethod.POST })
     public InterfaceResult createUploadVideo(@RequestBody TbVideo tbVideo, HttpServletRequest request, HttpServletResponse response) {
-        //校验参数合法性
-        ValidationResult validationResult = ValidationUtils.validateEntity(tbVideo);
-        if(validationResult.isHasErrors()) {
-            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION, validationResult);
-        }
-        if(null != tbVideo.getAttachment()) {
-            validationResult = ValidationUtils.validateEntity(tbVideo.getAttachment());
-            if(validationResult.isHasErrors()) {
+        try {
+            //校验参数合法性
+            ValidationResult validationResult = ValidationUtils.validateEntity(tbVideo);
+            if (validationResult.isHasErrors()) {
                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION, validationResult);
             }
-        }
+            if (null != tbVideo.getAttachment()) {
+                validationResult = ValidationUtils.validateEntity(tbVideo.getAttachment());
+                if (validationResult.isHasErrors()) {
+                    return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION, validationResult);
+                }
+            }
 
-        //获取ip地址
-        String ip = IPUtils.getRemoteAddr(request);
-        CreateUploadVideoResponse uploadVideo = accessAliyunService.createUploadVideo(tbVideo, ip);
-        return InterfaceResult.getSuccessInterfaceResultInstance(uploadVideo);
+            //获取ip地址
+            String ip = IPUtils.getRemoteAddr(request);
+            CreateUploadVideoResponse uploadVideo = accessAliyunService.createUploadVideo(tbVideo, ip);
+            return InterfaceResult.getSuccessInterfaceResultInstance(uploadVideo);
+
+        } catch (Exception e) {
+            LOGGER.error("获取视频上传凭证和地址异常,{}",e);
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION);
+        }
     }
 
     @ApiOperation(value = "刷新视频上传凭证", notes = "视频点播方式,用于视频文件上传超时后重新获取上传凭证。")
