@@ -80,8 +80,10 @@ public class AccessAliyunServiceImpl implements AccessAliyunService {
         try {
             res = vodClient.getAcsResponse(req);
         } catch (ServerException e) {
+            e.printStackTrace();
             throw new RuntimeException("GetVideoPlayAuthRequest Server failed");
         } catch (ClientException e) {
+            e.printStackTrace();
             throw new RuntimeException("GetVideoPlayAuthRequest Client failed");
         }
         LOGGER.info("获取播放凭证,response={}", JSON.toJSONString(res));
@@ -163,8 +165,10 @@ public class AccessAliyunServiceImpl implements AccessAliyunService {
         try {
             res = vodClient.getAcsResponse(req);
         } catch (ServerException e) {
+            e.printStackTrace();
             throw new RuntimeException("GetVideoInfoRequest Server failed");
         } catch (ClientException e) {
+            e.printStackTrace();
             throw new RuntimeException("GetVideoInfoRequest Client failed");
         }
         LOGGER.info("获取视频信息,response={}", JSON.toJSONString(res));
@@ -190,8 +194,10 @@ public class AccessAliyunServiceImpl implements AccessAliyunService {
         try {
             res = vodClient.getAcsResponse(req);
         } catch (ServerException e) {
+            e.printStackTrace();
             throw new RuntimeException("UpdateVideoInfoRequest Server failed");
         } catch (ClientException e) {
+            e.printStackTrace();
             throw new RuntimeException("UpdateVideoInfoRequest Client failed");
         }
         LOGGER.info("获取视频信息,response={}", JSON.toJSONString(res));
@@ -212,8 +218,10 @@ public class AccessAliyunServiceImpl implements AccessAliyunService {
         try {
             res = vodClient.getAcsResponse(req);
         } catch (ServerException e) {
+            e.printStackTrace();
             throw new RuntimeException("DeleteVideoRequest Server failed");
         } catch (ClientException e) {
+            e.printStackTrace();
             throw new RuntimeException("DeleteVideoRequest Client failed");
         }
         LOGGER.info("删除视频信息,response={}", JSON.toJSONString(res));
@@ -238,8 +246,10 @@ public class AccessAliyunServiceImpl implements AccessAliyunService {
         try {
             res = client.getAcsResponse(request);
         } catch (ServerException e) {
+            e.printStackTrace();
             throw new RuntimeException("AssumeRoleRequest Server failed");
         } catch (ClientException e) {
+            e.printStackTrace();
             throw new RuntimeException("AssumeRoleRequest Client failed");
         }
         LOGGER.info("获取安全令牌,credentials={}", JSON.toJSONString(res));
@@ -264,6 +274,7 @@ public class AccessAliyunServiceImpl implements AccessAliyunService {
         try {
             queue = mnsClient.createQueue(meta);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException("queue Server failed");
         }
         // 程序退出时，需主动调用client的close方法进行资源释放
@@ -327,8 +338,10 @@ public class AccessAliyunServiceImpl implements AccessAliyunService {
         try {
             res = client.getAcsResponse(req);
         } catch (ServerException e) {
+            e.printStackTrace();
             throw new RuntimeException("QueryMediaWorkflowListRequest Server failed");
         } catch (ClientException e) {
+            e.printStackTrace();
             throw new RuntimeException("QueryMediaWorkflowListRequest Client failed");
         }
         return res;
