@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.video.model;
 
 import com.ginkgocap.ywxt.user.model.User;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import java.io.Serializable;
@@ -20,6 +21,7 @@ public class TbVideo implements Serializable{
      * 视频标题
      */
     @NotEmpty(message = "视频标题不能为空")
+    @Length(max = 200, message = "视频标题不能超过200")
     private String title;
 
     /**
@@ -30,6 +32,7 @@ public class TbVideo implements Serializable{
     /**
      * 简介/描述
      */
+    @Length(max = 1000, message = "简介/描述不能超过1000")
     private String description;
 
     /**

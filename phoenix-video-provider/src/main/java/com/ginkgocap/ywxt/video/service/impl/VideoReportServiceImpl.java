@@ -1,5 +1,7 @@
 package com.ginkgocap.ywxt.video.service.impl;
 
+import com.ginkgocap.ywxt.user.model.User;
+import com.ginkgocap.ywxt.user.service.UserService;
 import com.ginkgocap.ywxt.video.dao.VideoReportDao;
 import com.ginkgocap.ywxt.video.model.TbVideoReport;
 import com.ginkgocap.ywxt.video.service.VideoReportService;
@@ -7,6 +9,7 @@ import com.ginkgocap.ywxt.video.utils.PageUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,6 +28,12 @@ public class VideoReportServiceImpl implements VideoReportService {
     @Autowired
     private VideoReportDao videoReportDao;
 
+    @Autowired
+    private UserService userService;
+
+    @Value("${nginx.root}")
+    private String nginxRoot;
+
 
     @Override
     public TbVideoReport insertVideoReport(TbVideoReport tbVideoReport) {
@@ -42,6 +51,15 @@ public class VideoReportServiceImpl implements VideoReportService {
         long count = videoReportDao.selectAllByVideoIdCount(videoId);
         PageUtil page = new PageUtil((int)count,currentPage,pageSize);
         List<TbVideoReport> list = videoReportDao.selectAllByVideoId(videoId, page.getPageStartRow() , pageSize);
+        for (TbVideoReport temp:list) {
+            if(null != temp.getUserId()) {
+                User user = userService.findUserByUserId(temp.getUserId());
+                if(null != user) {
+                    user.setPicPath(nginxRoot + user.getPicPath());
+                    temp.setUser(user);
+                }
+            }
+        }
         if(count<=0){
             list=new ArrayList<TbVideoReport>();
         }

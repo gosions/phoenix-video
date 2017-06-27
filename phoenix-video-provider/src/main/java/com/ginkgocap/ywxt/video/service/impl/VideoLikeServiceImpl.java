@@ -1,5 +1,7 @@
 package com.ginkgocap.ywxt.video.service.impl;
 
+import com.ginkgocap.ywxt.user.model.User;
+import com.ginkgocap.ywxt.user.service.UserService;
 import com.ginkgocap.ywxt.util.PageUtil;
 import com.ginkgocap.ywxt.video.dao.VideoLikeDao;
 import com.ginkgocap.ywxt.video.model.TbVideoLike;
@@ -7,6 +9,7 @@ import com.ginkgocap.ywxt.video.service.VideoLikeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,6 +28,12 @@ public class VideoLikeServiceImpl implements VideoLikeService {
     @Autowired
     private VideoLikeDao videoLikeDao;
 
+    @Autowired
+    private UserService userService;
+
+    @Value("${nginx.root}")
+    private String nginxRoot;
+
     @Override
     public TbVideoLike insertVideoLike(TbVideoLike tbVideoLike) {
         return videoLikeDao.insertVideoLike(tbVideoLike);
@@ -40,6 +49,15 @@ public class VideoLikeServiceImpl implements VideoLikeService {
         long count = videoLikeDao.selectAllByVideoIdCount(videoId);
         PageUtil page = new PageUtil((int)count,currentPage,pageSize);
         List<TbVideoLike> list = videoLikeDao.selectAllByVideoId(videoId, page.getPageStartRow(), pageSize);
+        for (TbVideoLike temp:list) {
+            if(null != temp.getUserId()) {
+                User user = userService.findUserByUserId(temp.getUserId());
+                if(null != user) {
+                    user.setPicPath(nginxRoot + user.getPicPath());
+                    temp.setUser(user);
+                }
+            }
+        }
         if(count<=0){
             list=new ArrayList<TbVideoLike>(pageSize);
         }

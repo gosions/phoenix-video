@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.video.service.impl;
 
 import com.alibaba.druid.util.StringUtils;
+import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.user.service.UserService;
 import com.ginkgocap.ywxt.video.dao.VideoDao;
 import com.ginkgocap.ywxt.video.model.TbVideo;
@@ -10,6 +11,7 @@ import com.ginkgocap.ywxt.video.utils.QueryReqBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -27,8 +29,12 @@ public class VideoServiceImpl implements VideoService {
 
     @Autowired
     private VideoDao videoDao;
+
     @Autowired
     private UserService userService;
+
+    @Value("${nginx.root}")
+    private String nginxRoot;
 
     @Override
     public TbVideo insertVideo(TbVideo tbVideo) {
@@ -60,7 +66,13 @@ public class VideoServiceImpl implements VideoService {
         mapParam.put("pageSize", page.getPageSize());
         List<TbVideo> list = videoDao.selectSearch(mapParam);
         for (TbVideo temp:list) {
-            temp.setUser(userService.findUserByUserId(temp.getUserId()));
+            if(null != temp.getUserId()) {
+                User user = userService.findUserByUserId(temp.getUserId());
+                if(null != user) {
+                    user.setPicPath(nginxRoot + user.getPicPath());
+                    temp.setUser(user);
+                }
+            }
         }
         if(count<=0){
             list=new ArrayList<TbVideo>();
