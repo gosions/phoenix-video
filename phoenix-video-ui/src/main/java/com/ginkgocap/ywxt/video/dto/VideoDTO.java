@@ -44,7 +44,7 @@ public class VideoDTO implements Serializable {
     /**
      * 视频分类id
      */
-    private Number cateId;
+   // private Number cateId;
 
     public VideoDTO() {
     }
@@ -97,11 +97,11 @@ public class VideoDTO implements Serializable {
         this.coverURL = coverURL;
     }
 
-    public Number getCateId() {
+   /* public Number getCateId() {
         return cateId;
     }
 
     public void setCateId(Number cateId) {
         this.cateId = cateId;
-    }
+    }*/
 }
