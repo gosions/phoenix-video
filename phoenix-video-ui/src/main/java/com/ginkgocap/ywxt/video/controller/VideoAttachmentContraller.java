@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -18,7 +19,7 @@ import java.io.IOException;
 /**
  * Created by gintong on 2017/6/5.
  */
-@Deprecated
+@ApiIgnore
 @RestController
 @RequestMapping("/v1/attachment")
 public class VideoAttachmentContraller extends BaseController{
@@ -28,7 +29,7 @@ public class VideoAttachmentContraller extends BaseController{
     @Resource
     private VideoService videoService;
 
-    @Deprecated
+
     @ApiOperation(value="创建视频附件", notes="根据TbVideoAttachment对象创建视频附件")
     @ApiImplicitParam(name = "tbVideoAttachment", value = "详细实体TbVideoAttachment", required = true, dataType = "TbVideoAttachment")
     @RequestMapping(value = { "/addAttachment.json" }, method = { RequestMethod.PUT })

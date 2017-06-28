@@ -33,8 +33,8 @@ public class VideoLikeContraller extends BaseController{
 
     @ApiOperation(value = "视频点赞", notes="")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "videoId", value = "视频id", required = true, dataType  = "Long"),
-            @ApiImplicitParam(name = "userId", value = "点赞用户id", required = true, dataType  = "Long")})
+            @ApiImplicitParam(name = "videoId", value = "视频id", required = true, dataType  = "Long", paramType = "path"),
+            @ApiImplicitParam(name = "userId", value = "点赞用户id", required = true, dataType  = "Long", paramType = "path")})
     @RequestMapping(value = { "/likeVideo/{videoId}/{userId}" }, method = { RequestMethod.POST })
     public InterfaceResult likeVideoById(
             @PathVariable("videoId") Long videoId,

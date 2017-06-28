@@ -98,7 +98,7 @@ public class VideoContraller extends BaseController{
     }
 
     @ApiOperation(value = "查询视频信息", notes = "返回视频的详细信息")
-    @ApiImplicitParam(name = "id", value = "视频id", required = true, dataType  = "Long")
+    @ApiImplicitParam(name = "id", value = "视频id", required = true, dataType  = "Long", paramType = "path")
     @RequestMapping(value = { "/getVideo/{id}" }, method = { RequestMethod.GET }, produces = MediaTypes.JSON_UTF_8)
     public InterfaceResult getVideoById(@PathVariable("id") Long id,
                                         HttpServletRequest request, HttpServletResponse response) {
@@ -120,7 +120,7 @@ public class VideoContraller extends BaseController{
     }
 
     @ApiOperation(value = "视频审核通过", notes = "视频状态由为审核变为正常")
-    @ApiImplicitParam(name = "id", value = "视频id", required = true, dataType  = "Long")
+    @ApiImplicitParam(name = "id", value = "视频id", required = true, dataType  = "Long", paramType = "path")
     @RequestMapping(value = { "/auditingPass/{id}" }, method = { RequestMethod.POST })
     public InterfaceResult videoAuditingPass(@PathVariable("id") Long id, HttpServletRequest request, HttpServletResponse response) {
         LOGGER.info("id={},视频审核通过",id);
@@ -142,7 +142,7 @@ public class VideoContraller extends BaseController{
     }
 
     @ApiOperation(value = "视频审核驳回", notes = "视频状态由为审核变为审核驳回")
-    @ApiImplicitParam(name = "id", value = "视频id", required = true, dataType  = "Long")
+    @ApiImplicitParam(name = "id", value = "视频id", required = true, dataType  = "Long", paramType = "path")
     @RequestMapping(value = { "/auditingRebut/{id}" }, method = { RequestMethod.POST })
     public InterfaceResult videoAuditingRebut(@PathVariable("id") Long id, HttpServletRequest request, HttpServletResponse response) {
         LOGGER.info("id={},视频审核驳回",id);
@@ -190,7 +190,7 @@ public class VideoContraller extends BaseController{
     }
 
     @ApiOperation(value = "视频审核启用", notes = "视频状态由禁用变为正常")
-    @ApiImplicitParam(name = "id", value = "视频id", required = true, dataType  = "Long")
+    @ApiImplicitParam(name = "id", value = "视频id", required = true, dataType  = "Long", paramType = "path")
     @RequestMapping(value = { "/auditingNormal/{id}" }, method = { RequestMethod.POST })
     public InterfaceResult videoAuditingNormal(@PathVariable("id") Long id, HttpServletRequest request, HttpServletResponse response) {
         LOGGER.info("id={},视频审核启用",id);
@@ -212,7 +212,7 @@ public class VideoContraller extends BaseController{
     }
 
     @ApiOperation(value = "视频审核置顶", notes = "非置顶的视频置顶，置顶的视频取消置顶")
-    @ApiImplicitParam(name = "id", value = "视频id", required = true, dataType  = "Long")
+    @ApiImplicitParam(name = "id", value = "视频id", required = true, dataType  = "Long", paramType = "path")
     @RequestMapping(value = { "/auditingTop/{id}" }, method = { RequestMethod.POST })
     public InterfaceResult videoAuditingTop(@PathVariable("id") Long id, HttpServletRequest request, HttpServletResponse response) {
         LOGGER.info("id={},视频审核置顶",id);
@@ -239,7 +239,7 @@ public class VideoContraller extends BaseController{
     }
 
     @ApiOperation(value = "删除视频信息", notes = "根据url的id来指定删除对象")
-    @ApiImplicitParam(name = "id", value = "视频id", required = true, dataType  = "Long")
+    @ApiImplicitParam(name = "id", value = "视频id", required = true, dataType  = "Long", paramType = "path")
     @RequestMapping(value = { "/deleteVideo/{id}" }, method = { RequestMethod.DELETE })
     public InterfaceResult VideoById(@PathVariable("id") Long id, HttpServletRequest request, HttpServletResponse response) {
         LOGGER.info("id={},删除视频",id);

@@ -39,8 +39,8 @@ public class VideoEnshrineContraller extends BaseController{
 
     @ApiOperation(value = "视频收藏", notes="")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "videoId", value = "视频id", required = true, dataType  = "Long"),
-            @ApiImplicitParam(name = "userId", value = "收藏用户id", required = true, dataType  = "Long")})
+            @ApiImplicitParam(name = "videoId", value = "视频id", required = true, dataType  = "Long", paramType = "path"),
+            @ApiImplicitParam(name = "userId", value = "收藏用户id", required = true, dataType  = "Long", paramType = "path")})
     @RequestMapping(value = { "/getVideo/{videoId}/{userId}" }, method = { RequestMethod.POST })
     public InterfaceResult enshrineVideoById(
             @PathVariable("videoId") long videoId,
@@ -59,7 +59,7 @@ public class VideoEnshrineContraller extends BaseController{
 
     @ApiOperation(value="根据视频id获取视频收藏列表", notes="")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "videoId", value = "视频id", required = true, dataType  = "Long"),
+            @ApiImplicitParam(name = "videoId", value = "视频id", required = true, dataType  = "Long", paramType = "path"),
             @ApiImplicitParam(name = "currentPage", value = "当前页数", required = true, dataType  = "int"),
             @ApiImplicitParam(name = "pageSize", value = "每页个数", required = true, dataType  = "int")})
     @RequestMapping(value = { "/video/{videoId}/{currentPage}/{pageSize}" }, method = { RequestMethod.GET })
@@ -80,7 +80,7 @@ public class VideoEnshrineContraller extends BaseController{
 
     @ApiOperation(value="根据收藏用户id获取视频收藏列表", notes="")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户id", required = true, dataType  = "Long"),
+            @ApiImplicitParam(name = "userId", value = "用户id", required = true, dataType  = "Long", paramType = "path"),
             @ApiImplicitParam(name = "currentPage", value = "当前页数", required = true, dataType  = "int"),
             @ApiImplicitParam(name = "pageSize", value = "每页个数", required = true, dataType  = "int")})
     @RequestMapping(value = { "/user/{userId}/{currentPage}/{pageSize}" }, method = { RequestMethod.GET })
