@@ -1,6 +1,10 @@
 package com.ginkgocap.ywxt.video.controller;
 
 
+import com.aliyun.mns.client.CloudQueue;
+import com.aliyun.mns.model.Message;
+import com.aliyuncs.mts.model.v20140618.QueryMediaWorkflowListResponse;
+import com.aliyuncs.sts.model.v20150401.AssumeRoleResponse;
 import com.aliyuncs.vod.model.v20170321.*;
 import com.ginkgocap.ywxt.video.model.TbVideo;
 import com.ginkgocap.ywxt.video.service.AccessAliyunService;
@@ -14,6 +18,7 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -32,15 +37,16 @@ public class AccessAliyunContraller {
     @Resource
     private AccessAliyunService accessAliyunService;
 
-
- /*   @ApiOperation(value = "获取安全令牌", notes = "OSS方式")
+    @ApiIgnore
+    @ApiOperation(value = "获取安全令牌", notes = "OSS方式")
     @RequestMapping(value = { "/getToken" }, method = { RequestMethod.GET })
-    public InterfaceResult getToken(HttpServletRequest request, HttpServletResponse response) throws ClientException {
+    public InterfaceResult getToken(HttpServletRequest request, HttpServletResponse response){
         AssumeRoleResponse token = accessAliyunService.getToken();
         return InterfaceResult.getSuccessInterfaceResultInstance(token);
-    }*/
+    }
 
- /*   @ApiOperation(value = "创建队列", notes = "")
+    @ApiIgnore
+    @ApiOperation(value = "创建队列", notes = "")
     @RequestMapping(value = { "/createQueue/{queueName}/{pollingWaitSeconds}/{maxMessageSize}" }, method = { RequestMethod.GET })
     public InterfaceResult createQueue(
             @PathVariable("queueName") String queueName,
@@ -49,23 +55,26 @@ public class AccessAliyunContraller {
             HttpServletRequest request, HttpServletResponse response) {
         CloudQueue queue = accessAliyunService.createQueue(queueName, pollingWaitSeconds, maxMessageSize);
         return InterfaceResult.getSuccessInterfaceResultInstance(queue);
-    }*/
+    }
 
-/*    @ApiOperation(value = "接收和删除消息", notes = "从队列中取出并删除该条消息。")
+    @ApiIgnore
+    @ApiOperation(value = "接收和删除消息", notes = "从队列中取出并删除该条消息。")
     @RequestMapping(value = { "/consume/{queueName}" }, method = { RequestMethod.GET })
     public InterfaceResult consume(@PathVariable("queueName") String queueName, HttpServletRequest request, HttpServletResponse response) {
         Message message = accessAliyunService.consumeMessage(queueName);
         return InterfaceResult.getSuccessInterfaceResultInstance(message);
-    }*/
+    }
 
- /*   @ApiOperation(value = "查询媒体工作流", notes = "")
+    @ApiIgnore
+    @ApiOperation(value = "查询媒体工作流", notes = "")
     @RequestMapping(value = { "/mediaWorkflowIds/{mediaWorkflowId}" }, method = { RequestMethod.GET })
     public InterfaceResult MediaWorkflowIds(@PathVariable("mediaWorkflowId") String mediaWorkflowId, HttpServletRequest request, HttpServletResponse response) {
         QueryMediaWorkflowListResponse res = accessAliyunService.MediaWorkflowIds(mediaWorkflowId);
         return InterfaceResult.getSuccessInterfaceResultInstance(res);
-    }*/
+    }
 
-/*    @ApiOperation(value = "消息主題", notes = "")
+/*    @ApiIgnore
+    @ApiOperation(value = "消息主題", notes = "")
     @RequestMapping(value = { "/cloudTopic/{cloudTopic}" }, method = { RequestMethod.GET })
     public InterfaceResult cloudTopic(@PathVariable("cloudTopic") String cloudTopic, HttpServletRequest request, HttpServletResponse response) {
         CloudTopic topicRef = mnsClient.getTopicRef(cloudTopic);
@@ -77,7 +86,7 @@ public class AccessAliyunContraller {
         return InterfaceResult.getSuccessInterfaceResultInstance(topicRef.getAttribute());
     }*/
 
-/*    @ApiOperation(value = "提交转码", notes = "OSS方式")
+ /*   @ApiOperation(value = "提交转码", notes = "OSS方式")
     @RequestMapping(value = { "/submitJobs" }, method = { RequestMethod.POST })
     public InterfaceResult submitJobs(HttpServletRequest request, HttpServletResponse response) {
         //提交转码
@@ -122,7 +131,7 @@ public class AccessAliyunContraller {
     }*/
 
     @ApiOperation(value = "获取播放凭证", notes = "视频点播方式")
-    @ApiImplicitParam(name = "id", value = "阿里云的视频id", required = true, dataType = "String")
+    @ApiImplicitParam(name = "id", value = "阿里云的视频id", required = true, dataType = "String", paramType = "path")
     @RequestMapping(value = { "/getVideoPlayAuth/{id}" }, method = { RequestMethod.GET })
     public InterfaceResult getVideoPlayAuth(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
         GetVideoPlayAuthResponse videoPlayAuth = accessAliyunService.getVideoPlayAuth(id);
@@ -130,7 +139,7 @@ public class AccessAliyunContraller {
     }
 
     @ApiOperation(value = "获取视频信息", notes = "视频点播方式")
-    @ApiImplicitParam(name = "id", value = "阿里云的视频id", required = true, dataType = "String")
+    @ApiImplicitParam(name = "id", value = "阿里云的视频id", required = true, dataType = "String", paramType = "path")
     @RequestMapping(value = { "/getVideoInfo/{id}" }, method = { RequestMethod.GET })
     public InterfaceResult getVideoInfo(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
         GetVideoInfoResponse videoInfo = accessAliyunService.getVideoInfo(id);
@@ -165,7 +174,7 @@ public class AccessAliyunContraller {
     }
 
     @ApiOperation(value = "刷新视频上传凭证", notes = "视频点播方式,用于视频文件上传超时后重新获取上传凭证。")
-    @ApiImplicitParam(name = "videoId", value = "阿里云的视频id", required = true, dataType = "String")
+    @ApiImplicitParam(name = "videoId", value = "阿里云的视频id", required = true, dataType = "String", paramType = "path")
     @RequestMapping(value = { "/refreshUploadVideo/{id}" }, method = { RequestMethod.POST })
     public InterfaceResult RefreshUploadVideo(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
         RefreshUploadVideoResponse refreshUploadVideoResponse = accessAliyunService.refreshUploadVideo(id);
