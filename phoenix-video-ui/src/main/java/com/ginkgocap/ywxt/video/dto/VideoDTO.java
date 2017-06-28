@@ -1,5 +1,6 @@
 package com.ginkgocap.ywxt.video.dto;
 
+import io.swagger.annotations.ApiModel;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import java.io.Serializable;
@@ -7,6 +8,7 @@ import java.io.Serializable;
 /**
  * Created by gintong on 2017/6/26.
  */
+@ApiModel
 public class VideoDTO implements Serializable {
 
     /**
