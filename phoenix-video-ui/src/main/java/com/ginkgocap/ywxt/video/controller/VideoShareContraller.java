@@ -46,8 +46,8 @@ public class VideoShareContraller extends BaseController{
     @ApiOperation(value="视频分享举报列表", notes="")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "videoId", value = "视频id", required = true, dataType  = "Long", paramType = "path"),
-            @ApiImplicitParam(name = "currentPage", value = "当前页数", required = true, dataType  = "int"),
-            @ApiImplicitParam(name = "pageSize", value = "每页个数", required = true, dataType  = "int")})
+            @ApiImplicitParam(name = "currentPage", value = "当前页数", required = true, dataType  = "int", paramType = "path"),
+            @ApiImplicitParam(name = "pageSize", value = "每页个数", required = true, dataType  = "int", paramType = "path")})
     @RequestMapping(value = { "/{videoId}/{currentPage}/{pageSize}" }, method = { RequestMethod.GET })
     public InterfaceResult getVideos(
             @PathVariable("videoId") Long videoId,

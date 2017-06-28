@@ -81,8 +81,8 @@ public class VideoEnshrineContraller extends BaseController{
     @ApiOperation(value="根据收藏用户id获取视频收藏列表", notes="")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", value = "用户id", required = true, dataType  = "Long", paramType = "path"),
-            @ApiImplicitParam(name = "currentPage", value = "当前页数", required = true, dataType  = "int"),
-            @ApiImplicitParam(name = "pageSize", value = "每页个数", required = true, dataType  = "int")})
+            @ApiImplicitParam(name = "currentPage", value = "当前页数", required = true, dataType  = "int", paramType = "path"),
+            @ApiImplicitParam(name = "pageSize", value = "每页个数", required = true, dataType  = "int", paramType = "path")})
     @RequestMapping(value = { "/user/{userId}/{currentPage}/{pageSize}" }, method = { RequestMethod.GET })
     public InterfaceResult getVideosByUser(
             @PathVariable("userId") Long userId,
