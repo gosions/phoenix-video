@@ -43,7 +43,15 @@ public class VideoServiceImpl implements VideoService {
 
     @Override
     public TbVideo selectByPrimaryKey(Long id) {
-        return videoDao.selectByPrimaryKey(id);
+        TbVideo tbVideo = videoDao.selectByPrimaryKey(id);
+        if(null != tbVideo && null != tbVideo.getUserId()) {
+            User user = userService.findUserByUserId(tbVideo.getUserId());
+            if(null != user) {
+                user.setPicPath(nginxRoot + user.getPicPath());
+                tbVideo.setUser(user);
+            }
+        }
+        return tbVideo;
     }
 
     @Override
