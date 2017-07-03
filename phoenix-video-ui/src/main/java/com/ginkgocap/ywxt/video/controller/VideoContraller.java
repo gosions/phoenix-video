@@ -121,8 +121,12 @@ public class VideoContraller extends BaseController{
             TbVideo tbVideo = videoService.selectByPrimaryKey(id);
             result.put("tbVideo", tbVideo);
             if (null != tbVideo && null != tbVideo.getAttachment() && null != tbVideo.getAttachment().getAliyunVideoId()) {
-                videoInfo = accessAliyunService.getVideoInfo(tbVideo.getAttachment().getAliyunVideoId()).getVideo();
-                tbVideo.getAttachment().setAliyunVideo(videoInfo);
+                try {
+                    videoInfo = accessAliyunService.getVideoInfo(tbVideo.getAttachment().getAliyunVideoId()).getVideo();
+                    tbVideo.getAttachment().setAliyunVideo(videoInfo);
+                } catch (Exception e) {
+                    LOGGER.error("从阿里云获取视频信息异常，{}",e);
+                }
             }
             return InterfaceResult.getSuccessInterfaceResultInstance(result);
         } catch (Exception e) {
