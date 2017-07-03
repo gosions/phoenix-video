@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -90,6 +91,17 @@ public class VideoContraller extends BaseController{
                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION, validationResult);
             }
             Map<String, Object> result = videoService.selectSearchPage(queryReqBean);
+            //获取阿里云的视频信息
+            List<TbVideo> list = (List<TbVideo>)result.get("results");
+            for (TbVideo temp:list) {
+                if(null != temp.getAttachmentId() && null != temp.getAttachment()) {
+                    try {
+                        temp.getAttachment().setAliyunVideo(accessAliyunService.getVideoInfo(temp.getAttachment().getAliyunVideoId()).getVideo());
+                    } catch (Exception e) {
+                        LOGGER.error("从阿里云获取视频信息异常，{}",e);
+                    }
+                }
+            }
             return InterfaceResult.getSuccessInterfaceResultInstance(result);
         } catch (Exception e) {
             LOGGER.error("获取视频列表异常，{}",e);

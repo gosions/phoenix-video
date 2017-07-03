@@ -107,7 +107,18 @@ public class VideoDaoImpl extends SqlSessionDaoSupport implements VideoDao{
 
     @Override
     public List<TbVideo> selectSearch(Map<String, Object> searchParams) {
-        return getSqlSession().selectList("tb_video.selectSearch", searchParams);
+        List<TbVideo> list = getSqlSession().selectList("tb_video.selectSearch", searchParams);
+        for (TbVideo temp:list) {
+            if(null != temp.getAttachmentId()){
+                TbVideoAttachment attachment = videoAttachmentDao.selectByPrimaryKey(temp.getAttachmentId());
+                temp.setAttachment(attachment);
+            }
+            if(null != temp.getTransformAttachmentId()){
+                TbVideoAttachment attachment = videoAttachmentDao.selectByPrimaryKey(temp.getTransformAttachmentId());
+                temp.setTransformAttachment(attachment);
+            }
+        }
+        return list;
     }
 
 }
