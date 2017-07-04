@@ -109,7 +109,7 @@ public class VideoEnshrineContraller extends BaseController{
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", value = "用户id", required = true, dataType  = "Long", paramType = "path"),
             @ApiImplicitParam(name = "videoId", value = "视频id", required = true, dataType  = "Long", paramType = "path")})
-    @RequestMapping(value = { "/cancelEnshrine/{videoId}/{userId}" }, method = { RequestMethod.GET })
+    @RequestMapping(value = { "/cancelEnshrine/{videoId}/{userId}" }, method = { RequestMethod.POST })
     public InterfaceResult cancelEnshrine(
             @PathVariable("videoId") long videoId,
             @PathVariable("userId") long userId,
