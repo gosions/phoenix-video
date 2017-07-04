@@ -45,6 +45,16 @@ public class VideoEnshrineServiceImpl implements VideoEnshrineService {
     }
 
     @Override
+    public int deleteByPrimaryKey(Long id) {
+        return videoEnshrineDao.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public TbVideoEnshrine selectByUserIdAndVideoId(Long userId, Long videoId) {
+        return videoEnshrineDao.selectByUserIdAndVideoId(userId, videoId);
+    }
+
+    @Override
     public Map<String, Object> selectAllByVideoId(Long videoId, int currentPage, int pageSize) {
         long count = videoEnshrineDao.selectAllByVideoIdCount(videoId);
         PageUtil page = new PageUtil((int)count,currentPage,pageSize);

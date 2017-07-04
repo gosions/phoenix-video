@@ -104,4 +104,32 @@ public class VideoEnshrineContraller extends BaseController{
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION);
         }
     }
+
+    @ApiOperation(value="收藏的视频取消收藏", notes="")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "用户id", required = true, dataType  = "Long", paramType = "path"),
+            @ApiImplicitParam(name = "videoId", value = "视频id", required = true, dataType  = "Long", paramType = "path")})
+    @RequestMapping(value = { "/cancelEnshrine/{videoId}/{userId}" }, method = { RequestMethod.GET })
+    public InterfaceResult cancelEnshrine(
+            @PathVariable("videoId") long videoId,
+            @PathVariable("userId") long userId,
+            HttpServletRequest request, HttpServletResponse response) {
+        try {
+            LOGGER.error("用戶取消收藏");
+            TbVideoEnshrine tbVideoEnshrine = videoEnshrineService.selectByUserIdAndVideoId(userId, videoId);
+            if(null == tbVideoEnshrine) {
+                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
+            }
+            int i = videoEnshrineService.deleteByPrimaryKey(tbVideoEnshrine.getId());
+            if(i > 0) {
+                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+            } else {
+                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION);
+            }
+
+        } catch (Exception e) {
+            LOGGER.error("取消收藏", e);
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION);
+        }
+    }
 }
