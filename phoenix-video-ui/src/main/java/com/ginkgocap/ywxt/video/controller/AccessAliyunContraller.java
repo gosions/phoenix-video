@@ -174,7 +174,7 @@ public class AccessAliyunContraller {
     }
 
     @ApiOperation(value = "刷新视频上传凭证", notes = "视频点播方式,用于视频文件上传超时后重新获取上传凭证。")
-    @ApiImplicitParam(name = "videoId", value = "阿里云的视频id", required = true, dataType = "String", paramType = "path")
+    @ApiImplicitParam(name = "id", value = "阿里云的视频id", required = true, dataType = "String", paramType = "path")
     @RequestMapping(value = { "/refreshUploadVideo/{id}" }, method = { RequestMethod.POST })
     public InterfaceResult RefreshUploadVideo(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
         RefreshUploadVideoResponse refreshUploadVideoResponse = accessAliyunService.refreshUploadVideo(id);
