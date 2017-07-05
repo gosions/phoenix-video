@@ -58,9 +58,9 @@
       <if test="title != null and title != ''">AND title like CONCAT('%',#{title},'%')</if>
       <if test="tag != null and tag != ''">AND tag like CONCAT('%',#{tag},'%')</if>
       <if test="description != null and description != ''">AND description like CONCAT('%',#{description},'%')</if>
-      <if test="status != null and status != ''">AND status = #{status}</if>
+      <if test="status != null ">AND status = #{status}</if>
       <if test="forbidden_reason != null and forbidden_reason != ''">AND forbidden_reason like CONCAT('%',#{forbiddenReason},'%')</if>
-      <if test="top != null and top != ''">AND top = #{top}</if>
+      <if test="top != null ">AND top = #{top}</if>
       <if test="likeTime != null and likeTime != ''">AND like_time = #{likeTime}</if>
       <if test="playTime != null and playTime != ''">AND play_time = #{playTime}</if>
       <if test="discussTime != null and discussTime != ''">AND discuss_time = #{discussTime}</if>
@@ -91,9 +91,9 @@
       <if test="title != null and title != ''">AND title like CONCAT('%',#{title},'%')</if>
       <if test="tag != null and tag != ''">AND tag like CONCAT('%',#{tag},'%')</if>
       <if test="description != null and description != ''">AND description like CONCAT('%',#{description},'%')</if>
-      <if test="status != null and status != ''">AND status = #{status}</if>
+      <if test="status != null ">AND status = #{status}</if>
       <if test="forbidden_reason != null and forbidden_reason != ''">AND forbidden_reason like CONCAT('%',#{forbiddenReason},'%')</if>
-      <if test="top != null and top != ''">AND top = #{top}</if>
+      <if test="top != null ">AND top = #{top}</if>
       <if test="likeTime != null and likeTime != ''">AND like_time = #{likeTime}</if>
       <if test="playTime != null and playTime != ''">AND play_time = #{playTime}</if>
       <if test="discussTime != null and discussTime != ''">AND discuss_time = #{discussTime}</if>

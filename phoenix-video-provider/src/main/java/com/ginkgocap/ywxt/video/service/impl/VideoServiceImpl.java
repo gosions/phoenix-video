@@ -1,6 +1,7 @@
 package com.ginkgocap.ywxt.video.service.impl;
 
 import com.alibaba.druid.util.StringUtils;
+import com.alibaba.fastjson.JSON;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.user.service.UserService;
 import com.ginkgocap.ywxt.video.dao.VideoDao;
@@ -47,7 +48,9 @@ public class VideoServiceImpl implements VideoService {
         if(null != tbVideo && null != tbVideo.getUserId()) {
             User user = userService.findUserByUserId(tbVideo.getUserId());
             if(null != user) {
-                user.setPicPath(nginxRoot + user.getPicPath());
+                if(null != user.getPicPath()) {
+                    user.setPicPath(nginxRoot + user.getPicPath());
+                }
                 tbVideo.setUser(user);
             }
         }
@@ -61,6 +64,7 @@ public class VideoServiceImpl implements VideoService {
 
     @Override
     public Map<String, Object> selectSearchPage(QueryReqBean queryReqBean) {
+        logger.info("按条件获取视频列表,queryReqBean={}", queryReqBean.toString());
         Map<String, Object> mapParam = new HashMap<String, Object>();
         mapParam = queryReqBean.getSearchParams();
         String sortExp = queryReqBean.getSortExp();
@@ -72,12 +76,15 @@ public class VideoServiceImpl implements VideoService {
         PageUtil page = new PageUtil((int)count, queryReqBean.getPageParameter().getCurrentPage(), queryReqBean.getPageParameter().getPageSize());
         mapParam.put("startRow", page.getPageStartRow());
         mapParam.put("pageSize", page.getPageSize());
+        logger.info("按条件获取视频列表,mapParam={}", JSON.toJSONString(mapParam));
         List<TbVideo> list = videoDao.selectSearch(mapParam);
         for (TbVideo temp:list) {
             if(null != temp.getUserId()) {
                 User user = userService.findUserByUserId(temp.getUserId());
                 if(null != user) {
-                    user.setPicPath(nginxRoot + user.getPicPath());
+                    if(null != user.getPicPath()) {
+                        user.setPicPath(nginxRoot + user.getPicPath());
+                    }
                     temp.setUser(user);
                 }
             }

@@ -54,7 +54,9 @@ public class VideoPlayServiceImpl implements VideoPlayService {
             if(null != temp.getUserId()) {
                 User user = userService.findUserByUserId(temp.getUserId());
                 if(null != user) {
-                    user.setPicPath(nginxRoot + user.getPicPath());
+                    if(null != user.getPicPath()) {
+                        user.setPicPath(nginxRoot + user.getPicPath());
+                    }
                     temp.setUser(user);
                 }
             }

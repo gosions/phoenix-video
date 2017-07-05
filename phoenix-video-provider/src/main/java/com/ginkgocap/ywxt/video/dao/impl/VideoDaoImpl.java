@@ -1,5 +1,6 @@
 package com.ginkgocap.ywxt.video.dao.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.ginkgocap.ywxt.util.DateFunc;
 import com.ginkgocap.ywxt.video.dao.VideoAttachmentDao;
 import com.ginkgocap.ywxt.video.dao.VideoDao;
@@ -8,6 +9,8 @@ import com.ginkgocap.ywxt.video.model.TbVideoAttachment;
 import com.ginkgocap.ywxt.video.model.TbVideoPlay;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.support.SqlSessionDaoSupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Repository;
@@ -25,6 +28,8 @@ import java.util.Map;
 public class VideoDaoImpl extends SqlSessionDaoSupport implements VideoDao{
 
     private ApplicationContext applicationContext;
+
+    private final Logger logger = LoggerFactory.getLogger(VideoDiscussDaoImpl.class);
 
     @Resource
     private VideoAttachmentDao videoAttachmentDao;
