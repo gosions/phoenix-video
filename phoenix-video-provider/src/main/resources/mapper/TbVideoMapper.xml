@@ -22,7 +22,7 @@
   <insert id="insert" parameterType="com.ginkgocap.ywxt.video.model.TbVideo" useGeneratedKeys="true" keyProperty="id">
     insert into tb_video (title, tag,
     description, status, forbidden_reason, top,
-    like_time, play_time, discuss_time, duration
+    like_time, play_time, discuss_time, duration,
     attachment_id, transform_attachment_id, create_time,
     user_id)
     values ( #{title,jdbcType=VARCHAR}, #{tag,jdbcType=VARCHAR},
