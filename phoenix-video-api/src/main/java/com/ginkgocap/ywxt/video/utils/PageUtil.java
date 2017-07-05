@@ -60,7 +60,7 @@ public class PageUtil implements Serializable {
                 nextPage = currentPage + 1;
             else{
                 nextPage = totalPage;
-                currentPage =   totalPage;
+              //  currentPage =   totalPage;
             }
             if (currentPage > 0 && currentPage <= totalPage) {
                 pageStartRow = (currentPage - 1) * pageSize;
