@@ -46,6 +46,22 @@
 			<artifactId>phoenix-util</artifactId>
 			<version>5.6.3</version>
 		</dependency>
+		<dependency>
+			<groupId>com.ginkgocap.ywxt</groupId>
+			<artifactId>phoenix-user-api</artifactId>
+			<version>5.6.3</version>
+		</dependency>
+		<dependency>
+			<groupId>com.ginkgocap.ywxt</groupId>
+			<artifactId>phoenix-organ-api</artifactId>
+			<version>1.0.2-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>phoenix-entire-api</artifactId>
+					<groupId>com.ginkgocap.ywxt</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 	</dependencies>
 
 	<build>

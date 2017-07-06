@@ -5,6 +5,7 @@ import com.ginkgocap.ywxt.user.service.UserService;
 import com.ginkgocap.ywxt.util.DateFunc;
 import com.ginkgocap.ywxt.video.dao.VideoDao;
 import com.ginkgocap.ywxt.video.dao.VideoEnshrineDao;
+import com.ginkgocap.ywxt.video.dto.UserDTO;
 import com.ginkgocap.ywxt.video.model.TbVideoEnshrine;
 import com.ginkgocap.ywxt.video.util.Utils;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -119,8 +120,10 @@ public class VideoEnshrineDaoImpl extends SqlSessionDaoSupport implements VideoE
             if(null != temp.getVideo() && null != temp.getVideo().getUserId()) {
                 User user = userService.findUserByUserId(temp.getVideo().getUserId());
                 if(null != user) {
+                    UserDTO userDTO = new UserDTO();
                     user.setPicPath(nginxRoot + user.getPicPath());
-                    temp.getVideo().setUser(user);
+                    userDTO.setUser(user);
+                    temp.getVideo().setUserDTO(userDTO);
                 }
             }
         }

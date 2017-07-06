@@ -16,6 +16,7 @@ import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
 import com.google.common.base.Strings;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -119,6 +120,36 @@ public class VideoContraller extends BaseController{
             Map<String, Object> result = new HashMap<>(2);
             GetVideoInfoResponse.Video videoInfo = null;
             TbVideo tbVideo = videoService.selectByPrimaryKey(id);
+            result.put("tbVideo", tbVideo);
+            if (null != tbVideo && null != tbVideo.getAttachment() && null != tbVideo.getAttachment().getAliyunVideoId()) {
+                try {
+                    videoInfo = accessAliyunService.getVideoInfo(tbVideo.getAttachment().getAliyunVideoId()).getVideo();
+                    tbVideo.getAttachment().setAliyunVideo(videoInfo);
+                } catch (Exception e) {
+                    LOGGER.error("从阿里云获取视频信息异常，{}",e);
+                }
+            }
+            return InterfaceResult.getSuccessInterfaceResultInstance(result);
+        } catch (Exception e) {
+            LOGGER.error("获取视频异常，{}",e);
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION);
+        }
+    }
+
+    @ApiOperation(value = "查询视频信息", notes = "返回视频的详细信息,包含是否关注组织信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "视频id", required = true, dataType  = "Long", paramType = "path"),
+            @ApiImplicitParam(name = "personId", value = "登录用户id", required = true, dataType  = "Long", paramType = "path")})
+    @RequestMapping(value = { "/getVideo/{id}/{personId}" }, method = { RequestMethod.GET }, produces = MediaTypes.JSON_UTF_8)
+    public InterfaceResult getVideoByIdAndpersonId(
+            @PathVariable("id") Long id,
+            @PathVariable("personId") Long personId,
+            HttpServletRequest request, HttpServletResponse response) {
+        LOGGER.info("id={},获取视频", id);
+        try {
+            Map<String, Object> result = new HashMap<>(2);
+            GetVideoInfoResponse.Video videoInfo = null;
+            TbVideo tbVideo = videoService.selectByPrimaryKeyAndPersonId(id, personId);
             result.put("tbVideo", tbVideo);
             if (null != tbVideo && null != tbVideo.getAttachment() && null != tbVideo.getAttachment().getAliyunVideoId()) {
                 try {

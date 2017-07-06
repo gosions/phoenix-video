@@ -14,6 +14,8 @@ public interface VideoService {
 
     TbVideo selectByPrimaryKey(Long id);
 
+    TbVideo selectByPrimaryKeyAndPersonId(Long id, Long personId);
+
     TbVideo updateVideo(TbVideo tbVideo);
 
     Map<String, Object> selectSearchPage(QueryReqBean queryReqBean);

@@ -1,6 +1,6 @@
 package com.ginkgocap.ywxt.video.model;
 
-import com.ginkgocap.ywxt.user.model.User;
+import com.ginkgocap.ywxt.video.dto.UserDTO;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -105,7 +105,7 @@ public class TbVideo implements Serializable{
     private Long userId;
 
     @Transient
-    private User user;
+    private UserDTO userDTO;
 
     public TbVideo() {
     }
@@ -368,19 +368,19 @@ public class TbVideo implements Serializable{
         this.forbiddenReason = forbiddenReason;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public Float getDuration() {
         return duration;
     }
 
     public void setDuration(Float duration) {
         this.duration = duration;
+    }
+
+    public UserDTO getUserDTO() {
+        return userDTO;
+    }
+
+    public void setUserDTO(UserDTO userDTO) {
+        this.userDTO = userDTO;
     }
 }

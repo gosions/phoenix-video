@@ -2,9 +2,11 @@ package com.ginkgocap.ywxt.video.service.impl;
 
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
+import com.ginkgocap.ywxt.organ.service.organ.OrganFollowService;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.user.service.UserService;
 import com.ginkgocap.ywxt.video.dao.VideoDao;
+import com.ginkgocap.ywxt.video.dto.UserDTO;
 import com.ginkgocap.ywxt.video.model.TbVideo;
 import com.ginkgocap.ywxt.video.service.VideoService;
 import com.ginkgocap.ywxt.video.utils.PageUtil;
@@ -34,6 +36,9 @@ public class VideoServiceImpl implements VideoService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private OrganFollowService organFollowService;
+
     @Value("${nginx.root}")
     private String nginxRoot;
 
@@ -48,10 +53,33 @@ public class VideoServiceImpl implements VideoService {
         if(null != tbVideo && null != tbVideo.getUserId()) {
             User user = userService.findUserByUserId(tbVideo.getUserId());
             if(null != user) {
+                UserDTO userDTO = new UserDTO();
                 if(null != user.getPicPath()) {
                     user.setPicPath(nginxRoot + user.getPicPath());
                 }
-                tbVideo.setUser(user);
+                userDTO.setUser(user);
+                tbVideo.setUserDTO(userDTO);
+            }
+        }
+        return tbVideo;
+    }
+
+    @Override
+    public TbVideo selectByPrimaryKeyAndPersonId(Long id, Long personId) {
+        TbVideo tbVideo = videoDao.selectByPrimaryKey(id);
+        if(null != tbVideo && null != tbVideo.getUserId()) {
+            User user = userService.findUserByUserId(tbVideo.getUserId());
+            if(null != user) {
+                UserDTO userDTO = new UserDTO();
+                if(null != user.getPicPath()) {
+                    user.setPicPath(nginxRoot + user.getPicPath());
+                }
+                if(user.isVirtual()){
+                    boolean flag = organFollowService.whetherExist(user.getId(), Long.parseLong(personId.toString()));
+                    userDTO.setIsfollow(flag);
+                }
+                userDTO.setUser(user);
+                tbVideo.setUserDTO(userDTO);
             }
         }
         return tbVideo;
@@ -82,10 +110,20 @@ public class VideoServiceImpl implements VideoService {
             if(null != temp.getUserId()) {
                 User user = userService.findUserByUserId(temp.getUserId());
                 if(null != user) {
+                    UserDTO userDTO = new UserDTO();
                     if(null != user.getPicPath()) {
                         user.setPicPath(nginxRoot + user.getPicPath());
                     }
-                    temp.setUser(user);
+                    userDTO.setUser(user);
+                    //个人用户是否关注组织
+                    Object personId = mapParam.get("personId");
+                    if(null != personId) {
+                        if(user.isVirtual()){
+                            boolean flag = organFollowService.whetherExist(user.getId(), Long.parseLong(personId.toString()));
+                            userDTO.setIsfollow(flag);
+                        }
+                    }
+                    temp.setUserDTO(userDTO);
                 }
             }
         }
