@@ -37,7 +37,17 @@ public class VideoDiscussServiceImpl implements VideoDiscussService {
 
     @Override
     public TbVideoDiscuss insertVideoDiscuss(TbVideoDiscuss tbVideoDiscuss) {
-        return videoDiscussDao.insertVideoDiscuss(tbVideoDiscuss);
+        TbVideoDiscuss videoDiscuss = videoDiscussDao.insertVideoDiscuss(tbVideoDiscuss);
+        if( null != videoDiscuss && null != videoDiscuss.getUserId()) {
+            User user = userService.findUserByUserId(videoDiscuss.getUserId());
+            if(null != user) {
+                if(null != user.getPicPath()) {
+                    user.setPicPath(nginxRoot + user.getPicPath());
+                }
+                videoDiscuss.setUser(user);
+            }
+        }
+        return videoDiscuss;
     }
 
     @Override
