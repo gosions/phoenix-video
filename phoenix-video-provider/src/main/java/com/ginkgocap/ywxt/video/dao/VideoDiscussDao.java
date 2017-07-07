@@ -14,6 +14,8 @@ public interface VideoDiscussDao extends ApplicationContextAware {
 
     TbVideoDiscuss selectByPrimaryKey(Long id);
 
+    int deleteByPrimaryKey(Long id);
+
     TbVideoDiscuss updateByPrimaryKey(TbVideoDiscuss tbVideoDiscuss);
 
     List<TbVideoDiscuss> selectAllByVideoId(Long videoId, Integer currentPage, Integer pageSize);

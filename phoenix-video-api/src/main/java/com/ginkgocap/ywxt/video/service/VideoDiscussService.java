@@ -13,5 +13,7 @@ public interface VideoDiscussService {
 
     TbVideoDiscuss selectByPrimaryKey(Long id);
 
+    int deleteByPrimaryKey(Long id);
+
     Map<String, Object> selectAllByVideoId(Long videoId, int currentPage, int pageSize);
 }

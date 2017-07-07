@@ -58,4 +58,30 @@ public class VideoDiscussContraller extends BaseController{
         Map<String, Object> stringObjectMap = videoDiscussService.selectAllByVideoId(videoId, currentPage, pageSize);
         return InterfaceResult.getSuccessInterfaceResultInstance(stringObjectMap);
     }
+
+    @ApiOperation(value="删除评论", notes="")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "评论id", required = true, dataType  = "Long", paramType = "path")})
+    @RequestMapping(value = { "/deleteVideoDiscuss/{id}" }, method = { RequestMethod.DELETE })
+    public InterfaceResult cancelEnshrine(
+            @PathVariable("id") long id,
+            HttpServletRequest request, HttpServletResponse response) {
+        try {
+            LOGGER.error("用戶删除评论");
+            TbVideoDiscuss tbVideoDiscuss = videoDiscussService.selectByPrimaryKey(id);
+            if(null == tbVideoDiscuss) {
+                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
+            }
+            int i = videoDiscussService.deleteByPrimaryKey(tbVideoDiscuss.getId());
+            if(i > 0) {
+                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SUCCESS);
+            } else {
+                return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION);
+            }
+
+        } catch (Exception e) {
+            LOGGER.error("删除评论", e);
+            return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION);
+        }
+    }
 }

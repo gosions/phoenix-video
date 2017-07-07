@@ -56,6 +56,11 @@ public class VideoDiscussServiceImpl implements VideoDiscussService {
     }
 
     @Override
+    public int deleteByPrimaryKey(Long id) {
+        return videoDiscussDao.deleteByPrimaryKey(id);
+    }
+
+    @Override
     public Map<String, Object> selectAllByVideoId(Long videoId, int currentPage, int pageSize) {
         logger.info("获取视频评论列表,videoId={},currentPage={},pageSize={}", videoId, currentPage, pageSize);
         long count = videoDiscussDao.selectAllByVideoIdCount(videoId);
