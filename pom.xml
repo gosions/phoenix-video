@@ -16,7 +16,7 @@
 	<modules>
 		<module>phoenix-video-api</module>
 		<module>phoenix-video-provider</module>
-		<module>phoenix-video-ui</module>
+		<module>phoenix-video-web</module>
 	</modules>
 
 	<properties>
