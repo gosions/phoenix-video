@@ -117,9 +117,11 @@ public class VideoServiceImpl implements VideoService {
                     userDTO.setUser(user);
                     //个人用户是否关注组织
                     Object personId = mapParam.get("personId");
+                    logger.info("个人用户personId={},组织userId={}", personId, user.getId());
                     if(null != personId) {
                         if(user.isVirtual()){
                             boolean flag = organFollowService.whetherExist(user.getId(), Long.parseLong(personId.toString()));
+                            logger.info("是否关注flag={}", flag);
                             userDTO.setIsfollow(flag);
                         }
                     }
