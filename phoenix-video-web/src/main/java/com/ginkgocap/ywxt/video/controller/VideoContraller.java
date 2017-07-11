@@ -179,6 +179,17 @@ public class VideoContraller extends BaseController{
             LOGGER.error("视频审核通过,视频状态异常，只有未审核的才能审核！,id={}",id);
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         } else {
+            GetVideoInfoResponse.Video videoInfo = null;
+            if (null != tbVideo && null != tbVideo.getAttachment() && null != tbVideo.getAttachment().getAliyunVideoId()) {
+                try {
+                    videoInfo = accessAliyunService.getVideoInfo(tbVideo.getAttachment().getAliyunVideoId()).getVideo();
+                } catch (Exception e) {
+                    LOGGER.error("从阿里云获取视频信息异常，{}",e);
+                }
+            }
+            if( null != videoInfo) {
+                tbVideo.setDuration(videoInfo.getDuration());//时长
+            }
             tbVideo.setStatus(VideoStatusType.pass_audit.getKey());
             TbVideo updateVideo = videoService.updateVideo(tbVideo);
             if(null != updateVideo) {
