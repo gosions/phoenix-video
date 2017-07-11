@@ -84,7 +84,7 @@
     ORDER BY ${sortExp}
   </select>
   <select id="selectSearch" resultMap="BaseResultMap" parameterType="java.util.Map" >
-    select id, title, tag,description, status, top, like_time, play_time, discuss_time,attachment_id, transform_attachment_id, create_time, user_id
+    select id, title, tag,description, status, top, like_time, play_time, discuss_time, duration, attachment_id, transform_attachment_id, create_time, user_id
     from tb_video
     <where>
       <if test="id != null and id != ''">id = #{id}</if>
