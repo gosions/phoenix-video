@@ -122,6 +122,10 @@ public class VideoServiceImpl implements VideoService {
                         if(user.isVirtual()){
                             boolean flag = organFollowService.whetherExist(user.getId(), Long.parseLong(personId.toString()));
                             logger.info("是否关注flag={}", flag);
+                            if(user.getId() == Long.parseLong(personId.toString())) {
+                                flag = true;
+                                logger.info("是否自己创建的组织flag={}", flag);
+                            }
                             userDTO.setIsfollow(flag);
                         }
                     }

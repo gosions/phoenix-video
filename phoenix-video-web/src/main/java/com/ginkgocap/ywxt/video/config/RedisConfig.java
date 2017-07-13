@@ -3,7 +3,9 @@ package com.ginkgocap.ywxt.video.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,15 +16,18 @@ import redis.clients.jedis.JedisPoolConfig;
 
 
 @Configuration
-@EnableAutoConfiguration
 public class RedisConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(RedisConfig.class);
 
+    @Autowired
+    private RedisConn redisConn;
+
     @Bean
-    @ConfigurationProperties(prefix="spring.redis")
     public JedisPoolConfig getRedisConfig(){
         JedisPoolConfig config = new JedisPoolConfig();
+        config.setMaxIdle(redisConn.getMaxIdle());
+        config.setMinIdle(redisConn.getMinIdle());
         return config;
     }
 
@@ -32,6 +37,10 @@ public class RedisConfig {
         JedisConnectionFactory factory = new JedisConnectionFactory();
         JedisPoolConfig config = getRedisConfig();
         factory.setPoolConfig(config);
+        factory.setDatabase(redisConn.getDatabase());
+        factory.setHostName(redisConn.getHostName());
+        factory.setPort(redisConn.getPort());
+        factory.setTimeout(redisConn.getTimeout());
         logger.info("JedisConnectionFactory bean init success.");
         return factory;
     }

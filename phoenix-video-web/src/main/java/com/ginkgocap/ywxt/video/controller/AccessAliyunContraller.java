@@ -8,7 +8,9 @@ import com.aliyuncs.sts.model.v20150401.AssumeRoleResponse;
 import com.aliyuncs.vod.model.v20170321.*;
 import com.ginkgocap.ywxt.video.model.TbVideo;
 import com.ginkgocap.ywxt.video.service.AccessAliyunService;
+import com.ginkgocap.ywxt.video.service.IRedisService;
 import com.ginkgocap.ywxt.video.utils.IPUtils;
+import com.ginkgocap.ywxt.video.utils.JSONUtil;
 import com.ginkgocap.ywxt.video.utils.validation.ValidationResult;
 import com.ginkgocap.ywxt.video.utils.validation.ValidationUtils;
 import com.gintong.frame.util.dto.CommonResultCode;
@@ -36,6 +38,9 @@ public class AccessAliyunContraller {
 
     @Resource
     private AccessAliyunService accessAliyunService;
+
+    @Resource
+    private IRedisService iRedisService;
 
     @ApiIgnore
     @ApiOperation(value = "获取安全令牌", notes = "OSS方式")
@@ -142,8 +147,15 @@ public class AccessAliyunContraller {
     @ApiImplicitParam(name = "id", value = "阿里云的视频id", required = true, dataType = "String", paramType = "path")
     @RequestMapping(value = { "/getVideoInfo/{id}" }, method = { RequestMethod.GET })
     public InterfaceResult getVideoInfo(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
-        GetVideoInfoResponse videoInfo = accessAliyunService.getVideoInfo(id);
-        return InterfaceResult.getSuccessInterfaceResultInstance(videoInfo);
+        String s = iRedisService.get(id);
+        LOGGER.info("先从redis中获取，s={}",s);
+        if(null == s) {
+            GetVideoInfoResponse videoInfo = accessAliyunService.getVideoInfo(id);
+            s = JSONUtil.toJson(videoInfo);
+            iRedisService.set(id, s);
+            iRedisService.expire(id, 1*30*60);
+        }
+        return InterfaceResult.getSuccessInterfaceResultInstance(JSONUtil.toBean(s, GetVideoInfoResponse.class));
     }
 
     @ApiOperation(value = "获取视频上传凭证和地址", notes = "视频点播方式")
