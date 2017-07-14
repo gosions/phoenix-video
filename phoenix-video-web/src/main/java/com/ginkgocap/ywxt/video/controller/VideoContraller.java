@@ -310,8 +310,11 @@ public class VideoContraller extends BaseController{
             tbVideo.setStatus(VideoStatusType.delete_audit.getKey());
             TbVideo updateVideo = videoService.updateVideo(tbVideo);
             //阿里云同步删除
-            accessAliyunService.deleteVideo(tbVideo.getAttachment().getAliyunVideoId());
-
+            try{
+                accessAliyunService.deleteVideo(tbVideo.getAttachment().getAliyunVideoId());
+            }catch (Exception e) {
+                LOGGER.error("阿里云同步删除异常,{}",e);
+            }
             if (null != updateVideo) {
                 return InterfaceResult.getSuccessInterfaceResultInstance(tbVideo);
             }
