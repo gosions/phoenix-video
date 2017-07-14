@@ -78,7 +78,7 @@ public class TbVideoAttachment implements Serializable {
      * 阿里云上对应的视频id
      */
     @Transient
-    private GetVideoInfoResponse.Video aliyunVideo;
+    private GetVideoInfoResponse.Video aliyunVideo=null;
 
     private static final long serialVersionUID = 1L;
 
