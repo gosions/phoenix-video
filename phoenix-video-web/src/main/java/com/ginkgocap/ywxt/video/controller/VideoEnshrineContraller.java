@@ -95,7 +95,11 @@ public class VideoEnshrineContraller extends BaseController{
             List<TbVideoEnshrine> list = (List<TbVideoEnshrine>) stringObjectMap.get("results");
             for (TbVideoEnshrine temp : list) {
                 if (null != temp.getVideo() && null != temp.getVideo().getAttachment() && null != temp.getVideo().getAttachment().getAliyunVideoId()) {
-                    temp.getVideo().getAttachment().setAliyunVideo(accessAliyunService.getVideoInfo(temp.getVideo().getAttachment().getAliyunVideoId()).getVideo());
+                    try {
+                        temp.getVideo().getAttachment().setAliyunVideo(accessAliyunService.getVideoInfo(temp.getVideo().getAttachment().getAliyunVideoId()).getVideo());
+                    }catch (Exception e) {
+                        LOGGER.error("从获取阿里云获取视频信息异常,{}",e);
+                    }
                 }
             }
             return InterfaceResult.getSuccessInterfaceResultInstance(stringObjectMap);
