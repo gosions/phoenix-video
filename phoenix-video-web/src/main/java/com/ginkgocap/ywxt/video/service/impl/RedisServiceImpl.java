@@ -39,6 +39,20 @@ public class RedisServiceImpl implements IRedisService {
         return result;
     }
 
+    @Override
+    public boolean set(String key, String value, long expire) {
+        boolean result = false;
+        boolean result_value = set(key, value);
+        boolean result_expire = false;
+        if(expire > 0) {
+            result_expire = expire(key, expire);
+            result = result_value && result_expire;
+        } else {
+            result = result_value;
+        }
+        return result;
+    }
+
     public String get(final String key){
         String result = redisTemplate.execute(new RedisCallback<String>() {
             @Override

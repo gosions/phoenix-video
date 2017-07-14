@@ -4,8 +4,6 @@ package com.ginkgocap.ywxt.video.config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +22,7 @@ public class RedisConfig {
     private RedisConn redisConn;
 
     @Bean
+   // @ConfigurationProperties(prefix="spring.redis")
     public JedisPoolConfig getRedisConfig(){
         JedisPoolConfig config = new JedisPoolConfig();
         config.setMaxIdle(redisConn.getMaxIdle());
@@ -32,7 +31,7 @@ public class RedisConfig {
     }
 
     @Bean
-    @ConfigurationProperties(prefix="spring.redis")
+    //@ConfigurationProperties(prefix="spring.redis")
     public JedisConnectionFactory getConnectionFactory(){
         JedisConnectionFactory factory = new JedisConnectionFactory();
         JedisPoolConfig config = getRedisConfig();
