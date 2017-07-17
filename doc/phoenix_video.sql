@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50158
 File Encoding         : 65001
 
-Date: 2017-07-07 11:12:37
+Date: 2017-07-17 14:57:39
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -38,9 +38,12 @@ CREATE TABLE `tb_video` (
   `like_time` bigint(20) DEFAULT '0' COMMENT '点赞次数',
   `play_time` bigint(20) DEFAULT '0' COMMENT '播放次数',
   `discuss_time` bigint(20) DEFAULT '0' COMMENT '评论次数',
+  `enshrine_time` bigint(20) DEFAULT '0' COMMENT '收藏次数',
+  `share_time` bigint(20) DEFAULT '0' COMMENT '分享次数',
   `duration` float(10,2) DEFAULT NULL COMMENT '视频时长',
   `attachment_id` bigint(20) DEFAULT NULL COMMENT '原视频附件',
   `transform_attachment_id` bigint(20) DEFAULT NULL COMMENT '转码后的视频附件',
+  `top_time` datetime DEFAULT NULL COMMENT '置顶/取消置顶时间',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `user_id` bigint(20) NOT NULL COMMENT '创建者',
   PRIMARY KEY (`id`),
