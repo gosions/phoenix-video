@@ -60,6 +60,7 @@ public class VideoDaoImpl extends SqlSessionDaoSupport implements VideoDao{
                 tbVideo.setTransformAttachment(tbVideoAttachment);
             }
         }
+        tbVideo.setTopTime(date);
         tbVideo.setCreateTime(date);
         int insert = getSqlSession().insert("tb_video.insert", tbVideo);
         setSqlSessionFactory(sqlSessionFactory);

@@ -11,7 +11,15 @@ public class UserDTO implements Serializable {
 
     private User user;
 
+    /**
+     * 是否关注组织
+     */
     private boolean isfollow=false;
+
+    /**
+     * 是否收藏视频
+     */
+    private boolean isNnshrine=false;
 
     public UserDTO() {
     }
@@ -30,5 +38,13 @@ public class UserDTO implements Serializable {
 
     public void setIsfollow(boolean isfollow) {
         this.isfollow = isfollow;
+    }
+
+    public boolean isNnshrine() {
+        return isNnshrine;
+    }
+
+    public void setNnshrine(boolean nnshrine) {
+        isNnshrine = nnshrine;
     }
 }

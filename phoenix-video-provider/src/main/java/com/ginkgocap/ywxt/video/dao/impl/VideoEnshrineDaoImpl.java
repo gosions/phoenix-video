@@ -6,6 +6,7 @@ import com.ginkgocap.ywxt.util.DateFunc;
 import com.ginkgocap.ywxt.video.dao.VideoDao;
 import com.ginkgocap.ywxt.video.dao.VideoEnshrineDao;
 import com.ginkgocap.ywxt.video.dto.UserDTO;
+import com.ginkgocap.ywxt.video.model.TbVideo;
 import com.ginkgocap.ywxt.video.model.TbVideoEnshrine;
 import com.ginkgocap.ywxt.video.util.Utils;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -57,6 +58,11 @@ public class VideoEnshrineDaoImpl extends SqlSessionDaoSupport implements VideoE
         Date date = DateFunc.getRegDate();
         tbVideo.setCreateTime(date);
         int insert = getSqlSession().insert("tb_video_enshrine.insert", tbVideo);
+        if(insert > 0) {
+            TbVideo primaryKey = videoDao.selectByPrimaryKey(tbVideo.getVideoId());
+            primaryKey.setEnshrineTime(primaryKey.getEnshrineTime() + 1L);
+            videoDao.updateVideo(primaryKey);
+        }
         setSqlSessionFactory(sqlSessionFactory);
         return tbVideo;
     }
@@ -70,9 +76,16 @@ public class VideoEnshrineDaoImpl extends SqlSessionDaoSupport implements VideoE
 
     @Override
     public int deleteByPrimaryKey(Long id) {
+        TbVideoEnshrine tbVideoEnshrine = selectByPrimaryKey(id);
         final Map<String, Object> mapParam = new HashMap<String, Object>(1);
         mapParam.put("id",id);
-        return getSqlSession().delete("tb_video_enshrine.deleteByPrimaryKey", mapParam);
+        int delete = getSqlSession().delete("tb_video_enshrine.deleteByPrimaryKey", mapParam);
+        if(delete > 0) {
+            TbVideo tbVideo = videoDao.selectByPrimaryKey(tbVideoEnshrine.getVideoId());
+            tbVideo.setEnshrineTime(tbVideo.getEnshrineTime() - 1L);
+            videoDao.updateVideo(tbVideo);
+        }
+        return delete;
     }
 
     @Override

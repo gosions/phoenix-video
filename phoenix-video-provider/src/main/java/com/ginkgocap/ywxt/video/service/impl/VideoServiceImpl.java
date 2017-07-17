@@ -6,8 +6,10 @@ import com.ginkgocap.ywxt.organ.service.organ.OrganFollowService;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.user.service.UserService;
 import com.ginkgocap.ywxt.video.dao.VideoDao;
+import com.ginkgocap.ywxt.video.dao.VideoEnshrineDao;
 import com.ginkgocap.ywxt.video.dto.UserDTO;
 import com.ginkgocap.ywxt.video.model.TbVideo;
+import com.ginkgocap.ywxt.video.model.TbVideoEnshrine;
 import com.ginkgocap.ywxt.video.service.VideoService;
 import com.ginkgocap.ywxt.video.utils.PageUtil;
 import com.ginkgocap.ywxt.video.utils.QueryReqBean;
@@ -32,6 +34,9 @@ public class VideoServiceImpl implements VideoService {
 
     @Autowired
     private VideoDao videoDao;
+
+    @Autowired
+    private VideoEnshrineDao videoEnshrineDao;
 
     @Autowired
     private UserService userService;
@@ -115,10 +120,11 @@ public class VideoServiceImpl implements VideoService {
                         user.setPicPath(nginxRoot + user.getPicPath());
                     }
                     userDTO.setUser(user);
-                    //个人用户是否关注组织
+                    //个人用户
                     Object personId = mapParam.get("personId");
                     logger.info("个人用户personId={},组织userId={}", personId, user.getId());
                     if(null != personId) {
+                        //是否关注组织
                         if(user.isVirtual()){
                             boolean flag = organFollowService.whetherExist(user.getId(), Long.parseLong(personId.toString()));
                             logger.info("是否关注flag={}", flag);
@@ -127,6 +133,12 @@ public class VideoServiceImpl implements VideoService {
                                 logger.info("是否自己创建的组织flag={}", flag);
                             }
                             userDTO.setIsfollow(flag);
+                        }
+                        //是否收藏该视频
+                        TbVideoEnshrine tbVideoEnshrine = videoEnshrineDao.selectByUserIdAndVideoId(Long.parseLong(personId.toString()), temp.getId());
+                        if(null != tbVideoEnshrine) {
+                            logger.info("是否收藏视频flag={}", true);
+                            userDTO.setNnshrine(true);
                         }
                     }
                     temp.setUserDTO(userDTO);

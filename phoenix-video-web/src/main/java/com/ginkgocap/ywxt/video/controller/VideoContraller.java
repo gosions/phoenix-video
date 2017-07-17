@@ -3,6 +3,7 @@ package com.ginkgocap.ywxt.video.controller;
 import com.alibaba.dubbo.common.json.JSON;
 import com.aliyuncs.vod.model.v20170321.GetVideoInfoResponse;
 import com.aliyuncs.vod.model.v20170321.UpdateVideoInfoResponse;
+import com.ginkgocap.ywxt.util.DateFunc;
 import com.ginkgocap.ywxt.video.constant.MediaTypes;
 import com.ginkgocap.ywxt.video.constant.VideoStatusType;
 import com.ginkgocap.ywxt.video.dto.AuditingForbiddenDTO;
@@ -26,6 +27,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -274,6 +276,7 @@ public class VideoContraller extends BaseController{
     @RequestMapping(value = { "/auditingTop/{id}" }, method = { RequestMethod.POST })
     public InterfaceResult videoAuditingTop(@PathVariable("id") Long id, HttpServletRequest request, HttpServletResponse response) {
         LOGGER.info("id={},视频审核置顶",id);
+        Date date = DateFunc.getRegDate();
         TbVideo tbVideo = videoService.selectByPrimaryKey(id);
         if(null == tbVideo) {
             LOGGER.error("视频审核置顶,视频不存在,id={}",id);
@@ -281,6 +284,7 @@ public class VideoContraller extends BaseController{
         } else if(0 == tbVideo.getTop()) {
             LOGGER.info("视频审核置顶！,id={}",id);
             tbVideo.setTop(1);
+            tbVideo.setTopTime(date);
             TbVideo updateVideo = videoService.updateVideo(tbVideo);
             if(null != updateVideo) {
                 return InterfaceResult.getSuccessInterfaceResultInstance(tbVideo);
@@ -288,6 +292,7 @@ public class VideoContraller extends BaseController{
         } else if(1 == tbVideo.getTop()) {
             LOGGER.info("视频审核取消置顶！,id={}",id);
             tbVideo.setTop(0);
+            tbVideo.setTopTime(date);
             TbVideo updateVideo = videoService.updateVideo(tbVideo);
             if(null != updateVideo) {
                 return InterfaceResult.getSuccessInterfaceResultInstance(tbVideo);

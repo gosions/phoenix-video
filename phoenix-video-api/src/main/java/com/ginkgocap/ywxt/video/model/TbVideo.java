@@ -69,6 +69,12 @@ public class TbVideo implements Serializable{
     private Long discussTime=0L;
 
     /**
+     * 收藏次数
+     */
+    @Column(name = "enshrine_time")
+    private Long enshrineTime=0L;
+
+    /**
      * 视频时长
      */
     @Column(name = "duration")
@@ -91,6 +97,12 @@ public class TbVideo implements Serializable{
 
     @Transient
     private TbVideoAttachment transformAttachment=null;
+
+    /**
+     * 置顶/取消置顶时间
+     */
+    @Column(name = "top_time")
+    private Date topTime;
 
     /**
      * 创建时间
@@ -382,5 +394,21 @@ public class TbVideo implements Serializable{
 
     public void setUserDTO(UserDTO userDTO) {
         this.userDTO = userDTO;
+    }
+
+    public Date getTopTime() {
+        return topTime;
+    }
+
+    public void setTopTime(Date topTime) {
+        this.topTime = topTime;
+    }
+
+    public Long getEnshrineTime() {
+        return enshrineTime;
+    }
+
+    public void setEnshrineTime(Long enshrineTime) {
+        this.enshrineTime = enshrineTime;
     }
 }
