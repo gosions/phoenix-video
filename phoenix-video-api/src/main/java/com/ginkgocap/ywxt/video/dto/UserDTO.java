@@ -19,7 +19,7 @@ public class UserDTO implements Serializable {
     /**
      * 是否收藏视频
      */
-    private boolean isNnshrine=false;
+    private boolean isEnshrine=false;
 
     public UserDTO() {
     }
@@ -40,11 +40,11 @@ public class UserDTO implements Serializable {
         this.isfollow = isfollow;
     }
 
-    public boolean isNnshrine() {
-        return isNnshrine;
+    public boolean isIsEnshrine() {
+        return isEnshrine;
     }
 
-    public void setNnshrine(boolean nnshrine) {
-        isNnshrine = nnshrine;
+    public void setIsEnshrine(boolean enshrine) {
+        isEnshrine = enshrine;
     }
 }

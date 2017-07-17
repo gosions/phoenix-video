@@ -138,7 +138,7 @@ public class VideoServiceImpl implements VideoService {
                         TbVideoEnshrine tbVideoEnshrine = videoEnshrineDao.selectByUserIdAndVideoId(Long.parseLong(personId.toString()), temp.getId());
                         if(null != tbVideoEnshrine) {
                             logger.info("是否收藏视频flag={}", true);
-                            userDTO.setNnshrine(true);
+                            userDTO.setIsEnshrine(true);
                         }
                     }
                     temp.setUserDTO(userDTO);
