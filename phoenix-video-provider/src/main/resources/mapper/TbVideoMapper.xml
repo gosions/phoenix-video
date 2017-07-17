@@ -13,6 +13,7 @@
     <result column="play_time" jdbcType="BIGINT" property="playTime" />
     <result column="discuss_time" jdbcType="BIGINT" property="discussTime" />
     <result column="enshrine_time" jdbcType="BIGINT" property="enshrineTime" />
+    <result column="share_time" jdbcType="BIGINT" property="shareTime" />
     <result column="duration" jdbcType="FLOAT" property="duration" />
     <result column="attachment_id" jdbcType="BIGINT" property="attachmentId" />
     <result column="transform_attachment_id" jdbcType="BIGINT" property="transformAttachmentId" />
@@ -24,12 +25,12 @@
   <insert id="insert" parameterType="com.ginkgocap.ywxt.video.model.TbVideo" useGeneratedKeys="true" keyProperty="id">
     insert into tb_video (title, tag,
     description, status, forbidden_reason, top,
-    like_time, play_time, discuss_time, enshrine_time, duration,
+    like_time, play_time, discuss_time, enshrine_time, share_time, duration,
     attachment_id, transform_attachment_id, top_time, create_time,
     user_id)
     values ( #{title,jdbcType=VARCHAR}, #{tag,jdbcType=VARCHAR},
     #{description,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT},#{forbiddenReason,jdbcType=VARCHAR}, #{top,jdbcType=TINYINT},
-    #{likeTime,jdbcType=BIGINT}, #{playTime,jdbcType=BIGINT}, #{discussTime,jdbcType=BIGINT},#{enshrine_time,jdbcType=BIGINT}, #{duration,jdbcType=FLOAT},
+    #{likeTime,jdbcType=BIGINT}, #{playTime,jdbcType=BIGINT}, #{discussTime,jdbcType=BIGINT},#{enshrine_time,jdbcType=BIGINT},#{share_time,jdbcType=BIGINT}, #{duration,jdbcType=FLOAT},
     #{attachmentId,jdbcType=BIGINT}, #{transformAttachmentId,jdbcType=BIGINT}, #{top_time,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP},
     #{userId,jdbcType=BIGINT})
   </insert>
@@ -46,6 +47,7 @@
     play_time = #{playTime,jdbcType=BIGINT},
     discuss_time = #{discussTime,jdbcType=BIGINT},
     enshrine_time = #{enshrineTime,jdbcType=BIGINT},
+    share_time = #{shareTime,jdbcType=BIGINT},
     duration = #{duration,jdbcType=FLOAT},
     attachment_id = #{attachmentId,jdbcType=BIGINT},
     transform_attachment_id = #{transformAttachmentId,jdbcType=BIGINT},
@@ -69,6 +71,7 @@
       <if test="playTime != null and playTime != ''">AND play_time = #{playTime}</if>
       <if test="discussTime != null and discussTime != ''">AND discuss_time = #{discussTime}</if>
       <if test="enshrineTime != null and enshrineTime != ''">AND enshrine_time = #{enshrineTime}</if>
+      <if test="shareTime != null and shareTime != ''">AND share_time = #{shareTime}</if>
       <if test="topTime != null and topTime != ''">AND top_time = #{topTime}</if>
       <if test="createTime != null and createTime != ''">AND create_time = #{createTime}</if>
       <if test="userId != null and userId != ''">AND user_id = #{userId}</if>
@@ -90,7 +93,7 @@
     ORDER BY ${sortExp}
   </select>
   <select id="selectSearch" resultMap="BaseResultMap" parameterType="java.util.Map" >
-    select id, title, tag,description, status, top, like_time, play_time, discuss_time,enshrine_time, duration, attachment_id, transform_attachment_id, top_time,create_time, user_id
+    select id, title, tag,description, status, top, like_time, play_time, discuss_time,enshrine_time,share_time, duration, attachment_id, transform_attachment_id, top_time,create_time, user_id
     from tb_video
     <where>
       <if test="id != null and id != ''">id = #{id}</if>
@@ -104,6 +107,7 @@
       <if test="playTime != null and playTime != ''">AND play_time = #{playTime}</if>
       <if test="discussTime != null and discussTime != ''">AND discuss_time = #{discussTime}</if>
       <if test="enshrineTime != null and enshrineTime != ''">AND enshrine_time = #{enshrineTime}</if>
+      <if test="shareTime != null and shareTime != ''">AND share_time = #{shareTime}</if>
       <if test="topTime != null and topTime != ''">AND top_time = #{topTime}</if>
       <if test="createTime != null and createTime != ''">AND create_time = #{createTime}</if>
       <if test="userId != null and userId != ''">AND user_id = #{userId}</if>
@@ -127,7 +131,7 @@
   </select>
 
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.util.Map" >
-    select id, title, tag,description, status, top, like_time, play_time, discuss_time,enshrine_time,duration,attachment_id, transform_attachment_id, top_time, create_time, user_id
+    select id, title, tag,description, status, top, like_time, play_time, discuss_time,enshrine_time,share_time,duration,attachment_id, transform_attachment_id, top_time, create_time, user_id
     from tb_video
     where id = #{id,jdbcType=BIGINT}
   </select>

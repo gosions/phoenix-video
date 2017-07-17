@@ -1,12 +1,15 @@
 package com.ginkgocap.ywxt.video.dao.impl;
 
 import com.ginkgocap.ywxt.util.DateFunc;
+import com.ginkgocap.ywxt.video.dao.VideoDao;
+import com.ginkgocap.ywxt.video.model.TbVideo;
 import com.ginkgocap.ywxt.video.model.TbVideoShare;
 import com.ginkgocap.ywxt.video.util.Utils;
 import com.ginkgocap.ywxt.video.dao.VideoShareDao;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.support.SqlSessionDaoSupport;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Repository;
 
@@ -23,6 +26,9 @@ public class VideoShareDaoImpl extends SqlSessionDaoSupport implements VideoShar
 
     private ApplicationContext applicationContext;
 
+    @Autowired
+    private VideoDao videoDao;
+
     @Override
     public void setApplicationContext(ApplicationContext applicationContext)
             throws BeansException {
@@ -36,6 +42,11 @@ public class VideoShareDaoImpl extends SqlSessionDaoSupport implements VideoShar
         Date date = DateFunc.getRegDate();
         tbVideo.setCreateTime(date);
         int insert = getSqlSession().insert("tb_video_share.insert", tbVideo);
+        if(insert > 0) {
+            TbVideo primaryKey = videoDao.selectByPrimaryKey(tbVideo.getVideoId());
+            primaryKey.setShareTime(primaryKey.getShareTime() + 1L);
+            videoDao.updateVideo(primaryKey);
+        }
         setSqlSessionFactory(sqlSessionFactory);
         return tbVideo;
     }

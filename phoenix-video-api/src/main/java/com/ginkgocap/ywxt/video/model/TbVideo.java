@@ -75,6 +75,12 @@ public class TbVideo implements Serializable{
     private Long enshrineTime=0L;
 
     /**
+     * 分享次数
+     */
+    @Column(name = "share_time")
+    private Long shareTime=0L;
+
+    /**
      * 视频时长
      */
     @Column(name = "duration")
@@ -410,5 +416,13 @@ public class TbVideo implements Serializable{
 
     public void setEnshrineTime(Long enshrineTime) {
         this.enshrineTime = enshrineTime;
+    }
+
+    public Long getShareTime() {
+        return shareTime;
+    }
+
+    public void setShareTime(Long shareTime) {
+        this.shareTime = shareTime;
     }
 }
