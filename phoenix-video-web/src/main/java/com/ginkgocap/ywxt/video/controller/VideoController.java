@@ -2,7 +2,6 @@ package com.ginkgocap.ywxt.video.controller;
 
 import com.alibaba.dubbo.common.json.JSON;
 import com.aliyuncs.vod.model.v20170321.GetVideoInfoResponse;
-import com.aliyuncs.vod.model.v20170321.UpdateVideoInfoResponse;
 import com.ginkgocap.ywxt.util.DateFunc;
 import com.ginkgocap.ywxt.video.constant.MediaTypes;
 import com.ginkgocap.ywxt.video.constant.VideoStatusType;
@@ -37,9 +36,9 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/v1/video")
-public class VideoContraller extends BaseController{
+public class VideoController extends BaseController{
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(VideoContraller.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(VideoController.class);
 
     @Resource
     private VideoService videoService;

@@ -22,9 +22,9 @@ import java.io.IOException;
 @ApiIgnore
 @RestController
 @RequestMapping("/v1/attachment")
-public class VideoAttachmentContraller extends BaseController{
+public class VideoAttachmentController extends BaseController{
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(VideoAttachmentContraller.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(VideoAttachmentController.class);
 
     @Resource
     private VideoService videoService;

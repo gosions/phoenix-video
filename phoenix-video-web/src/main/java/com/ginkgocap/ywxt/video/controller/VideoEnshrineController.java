@@ -27,9 +27,9 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/v1/enshrineVideo")
-public class VideoEnshrineContraller extends BaseController{
+public class VideoEnshrineController extends BaseController{
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(VideoEnshrineContraller.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(VideoEnshrineController.class);
 
     @Resource
     private VideoEnshrineService videoEnshrineService;

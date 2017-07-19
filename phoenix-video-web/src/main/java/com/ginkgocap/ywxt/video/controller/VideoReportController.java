@@ -24,9 +24,9 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/v1/reportVideo")
-public class VideoReportContraller extends BaseController{
+public class VideoReportController extends BaseController{
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(VideoReportContraller.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(VideoReportController.class);
 
     @Resource
     private VideoReportService videoReportService;

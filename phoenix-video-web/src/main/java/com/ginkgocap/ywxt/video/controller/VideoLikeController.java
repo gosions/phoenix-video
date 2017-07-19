@@ -24,9 +24,9 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/v1/likeVideo")
-public class VideoLikeContraller extends BaseController{
+public class VideoLikeController extends BaseController{
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(VideoLikeContraller.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(VideoLikeController.class);
 
     @Resource
     private VideoLikeService videoLikeService;

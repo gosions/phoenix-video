@@ -32,9 +32,9 @@ import javax.servlet.http.HttpServletResponse;
  */
 @RestController
 @RequestMapping("/v1/access")
-public class AccessAliyunContraller {
+public class AccessAliyunController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AccessAliyunContraller.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AccessAliyunController.class);
 
     @Resource
     private AccessAliyunService accessAliyunService;
