@@ -83,6 +83,12 @@ public class VideoServiceImpl implements VideoService {
                     boolean flag = organFollowService.whetherExist(user.getId(), Long.parseLong(personId.toString()));
                     userDTO.setIsfollow(flag);
                 }
+                //是否收藏该视频
+                TbVideoEnshrine tbVideoEnshrine = videoEnshrineDao.selectByUserIdAndVideoId(Long.parseLong(personId.toString()), tbVideo.getId());
+                if(null != tbVideoEnshrine) {
+                    logger.info("是否收藏视频flag={}", true);
+                    userDTO.setIsEnshrine(true);
+                }
                 userDTO.setUser(user);
                 tbVideo.setUserDTO(userDTO);
             }
@@ -135,11 +141,11 @@ public class VideoServiceImpl implements VideoService {
                             userDTO.setIsfollow(flag);
                         }
                         //是否收藏该视频
-                        TbVideoEnshrine tbVideoEnshrine = videoEnshrineDao.selectByUserIdAndVideoId(Long.parseLong(personId.toString()), temp.getId());
+                       /* TbVideoEnshrine tbVideoEnshrine = videoEnshrineDao.selectByUserIdAndVideoId(Long.parseLong(personId.toString()), temp.getId());
                         if(null != tbVideoEnshrine) {
                             logger.info("是否收藏视频flag={}", true);
                             userDTO.setIsEnshrine(true);
-                        }
+                        }*/
                     }
                     temp.setUserDTO(userDTO);
                 }
