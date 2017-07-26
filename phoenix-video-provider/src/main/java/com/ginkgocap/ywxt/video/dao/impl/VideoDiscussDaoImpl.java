@@ -70,7 +70,7 @@ public class VideoDiscussDaoImpl extends SqlSessionDaoSupport implements VideoDi
         int delete = getSqlSession().delete("tb_video_discuss.deleteByPrimaryKey", mapParam);
         if(delete > 0) {
             TbVideo tbVideo = videoDao.selectByPrimaryKey(tbVideoDiscuss.getVideoId());
-            if(Long.getLong("0").compareTo(tbVideo.getDiscussTime()) < 0) {
+            if(Long.valueOf("0").compareTo(tbVideo.getDiscussTime()) < 0) {
                 tbVideo.setDiscussTime(tbVideo.getDiscussTime() - 1L);
                 videoDao.updateVideo(tbVideo);
             }
