@@ -82,8 +82,10 @@ public class VideoEnshrineDaoImpl extends SqlSessionDaoSupport implements VideoE
         int delete = getSqlSession().delete("tb_video_enshrine.deleteByPrimaryKey", mapParam);
         if(delete > 0) {
             TbVideo tbVideo = videoDao.selectByPrimaryKey(tbVideoEnshrine.getVideoId());
-            tbVideo.setEnshrineTime(tbVideo.getEnshrineTime() - 1L);
-            videoDao.updateVideo(tbVideo);
+            if(Long.getLong("0").compareTo(tbVideo.getEnshrineTime()) < 0) {
+                tbVideo.setEnshrineTime(tbVideo.getEnshrineTime() - 1L);
+                videoDao.updateVideo(tbVideo);
+            }
         }
         return delete;
     }
