@@ -38,6 +38,8 @@ public class AccessAliyunServiceImpl implements AccessAliyunService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AccessAliyunServiceImpl.class);
 
+    private static final long AUTH_TIMEOUT = 3600L;
+
     private static OSSConfigure ossConfigure = OSSConfigure.getInstance();
 
     private static DefaultAcsClient client = null;
@@ -100,6 +102,8 @@ public class AccessAliyunServiceImpl implements AccessAliyunService {
     public GetPlayInfoResponse GetPlayInfo(String videoId) {
         GetPlayInfoRequest req = new GetPlayInfoRequest();
         req.setVideoId(videoId);
+        req.setAuthTimeout(AUTH_TIMEOUT);
+        req.setFormats("mp4");
         GetPlayInfoResponse res = null;
         try {
             res = vodClient.getAcsResponse(req);
