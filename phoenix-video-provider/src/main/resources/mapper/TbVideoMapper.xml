@@ -30,8 +30,8 @@
     user_id)
     values ( #{title,jdbcType=VARCHAR}, #{tag,jdbcType=VARCHAR},
     #{description,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT},#{forbiddenReason,jdbcType=VARCHAR}, #{top,jdbcType=TINYINT},
-    #{likeTime,jdbcType=BIGINT}, #{playTime,jdbcType=BIGINT}, #{discussTime,jdbcType=BIGINT},#{enshrine_time,jdbcType=BIGINT},#{share_time,jdbcType=BIGINT}, #{duration,jdbcType=FLOAT},
-    #{attachmentId,jdbcType=BIGINT}, #{transformAttachmentId,jdbcType=BIGINT}, #{top_time,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP},
+    #{likeTime,jdbcType=BIGINT}, #{playTime,jdbcType=BIGINT}, #{discussTime,jdbcType=BIGINT},#{enshrineTime,jdbcType=BIGINT},#{shareTime,jdbcType=BIGINT}, #{duration,jdbcType=FLOAT},
+    #{attachmentId,jdbcType=BIGINT}, #{transformAttachmentId,jdbcType=BIGINT}, #{topTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP},
     #{userId,jdbcType=BIGINT})
   </insert>
 

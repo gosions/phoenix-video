@@ -4,7 +4,7 @@ import com.alibaba.dubbo.common.json.JSON;
 import com.aliyuncs.vod.model.v20170321.GetVideoInfoResponse;
 import com.ginkgocap.ywxt.util.DateFunc;
 import com.ginkgocap.ywxt.video.constant.MediaTypes;
-import com.ginkgocap.ywxt.video.constant.VideoStatusType;
+import com.ginkgocap.ywxt.video.constant.VideoStatusEnum;
 import com.ginkgocap.ywxt.video.dto.AuditingForbiddenDTO;
 import com.ginkgocap.ywxt.video.dto.VideoDTO;
 import com.ginkgocap.ywxt.video.model.*;
@@ -176,7 +176,7 @@ public class VideoController extends BaseController{
         if(null == tbVideo) {
             LOGGER.error("视频审核通过,视频不存在,id={}",id);
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
-        } else if(VideoStatusType.no_audit.getKey() != tbVideo.getStatus()) {
+        } else if(VideoStatusEnum.NO_AUDIT.getKey() != tbVideo.getStatus()) {
             LOGGER.error("视频审核通过,视频状态异常，只有未审核的才能审核！,id={}",id);
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         } else {
@@ -191,7 +191,7 @@ public class VideoController extends BaseController{
             if( null != videoInfo) {
                 tbVideo.setDuration(videoInfo.getDuration());//时长
             }
-            tbVideo.setStatus(VideoStatusType.pass_audit.getKey());
+            tbVideo.setStatus(VideoStatusEnum.PASS_AUDIT.getKey());
             TbVideo updateVideo = videoService.updateVideo(tbVideo);
             if(null != updateVideo) {
                 return InterfaceResult.getSuccessInterfaceResultInstance(tbVideo);
@@ -209,11 +209,11 @@ public class VideoController extends BaseController{
         if(null == tbVideo) {
             LOGGER.error("视频审核驳回,视频不存在,id={}",id);
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
-        } else if(VideoStatusType.no_audit.getKey() != tbVideo.getStatus()) {
+        } else if(VideoStatusEnum.NO_AUDIT.getKey() != tbVideo.getStatus()) {
             LOGGER.error("视频审核驳回,视频状态异常，只有未审核的才能审核！,id={}",id);
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         } else {
-            tbVideo.setStatus(VideoStatusType.rebut_audit.getKey());
+            tbVideo.setStatus(VideoStatusEnum.REBUT_AUDIT.getKey());
             TbVideo updateVideo = videoService.updateVideo(tbVideo);
             if(null != updateVideo) {
                 return InterfaceResult.getSuccessInterfaceResultInstance(tbVideo);
@@ -231,14 +231,14 @@ public class VideoController extends BaseController{
         if(null == tbVideo) {
             LOGGER.error("视频审核禁用,视频不存在,id={}",auditingForbiddenDTO.getId());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
-        } else if(VideoStatusType.pass_audit.getKey() != tbVideo.getStatus()) {
+        } else if(VideoStatusEnum.PASS_AUDIT.getKey() != tbVideo.getStatus()) {
             LOGGER.error("视频审核禁用,视频状态异常，只有审核正常的才能禁用！,id={}",auditingForbiddenDTO.getId());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         } else if(Strings.isNullOrEmpty(auditingForbiddenDTO.getForbiddenReason())) {
             LOGGER.error("缺少禁用原因！,id={}",auditingForbiddenDTO.getId());
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         } else{
-            tbVideo.setStatus(VideoStatusType.forbidden_audit.getKey());
+            tbVideo.setStatus(VideoStatusEnum.FORBIDDEN_AUDIT.getKey());
             tbVideo.setForbiddenReason(auditingForbiddenDTO.getForbiddenReason());
             TbVideo updateVideo = videoService.updateVideo(tbVideo);
             if(null != updateVideo) {
@@ -257,11 +257,11 @@ public class VideoController extends BaseController{
         if(null == tbVideo) {
             LOGGER.error("视频审核启用,视频不存在,id={}",id);
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
-        } else if(VideoStatusType.forbidden_audit.getKey() != tbVideo.getStatus()) {
+        } else if(VideoStatusEnum.FORBIDDEN_AUDIT.getKey() != tbVideo.getStatus()) {
             LOGGER.error("视频审核启用,视频状态异常，只有审核禁用的才能启用！,id={}",id);
             return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
         } else {
-            tbVideo.setStatus(VideoStatusType.pass_audit.getKey());
+            tbVideo.setStatus(VideoStatusEnum.PASS_AUDIT.getKey());
             TbVideo updateVideo = videoService.updateVideo(tbVideo);
             if(null != updateVideo) {
                 return InterfaceResult.getSuccessInterfaceResultInstance(tbVideo);
@@ -311,7 +311,7 @@ public class VideoController extends BaseController{
                 LOGGER.error("删除视频,视频不存在,id={}", id);
                 return InterfaceResult.getInterfaceResultInstance(CommonResultCode.PARAMS_EXCEPTION);
             }
-            tbVideo.setStatus(VideoStatusType.delete_audit.getKey());
+            tbVideo.setStatus(VideoStatusEnum.DELETE_AUDIT.getKey());
             TbVideo updateVideo = videoService.updateVideo(tbVideo);
             //阿里云同步删除
             try{
