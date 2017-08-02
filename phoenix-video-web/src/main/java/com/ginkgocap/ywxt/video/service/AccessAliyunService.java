@@ -21,6 +21,13 @@ public interface AccessAliyunService {
     GetVideoPlayAuthResponse getVideoPlayAuth(String videoId);
 
     /**
+     * 阿里云 视频点播 获取视频播放地址
+     * @param videoId
+     * @return
+     */
+    GetPlayInfoResponse GetPlayInfo(String videoId);
+
+    /**
      * 阿里云 视频点播 获取视频上传凭证和地址
      * @param tbVideo
      * @return

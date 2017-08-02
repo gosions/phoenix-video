@@ -143,6 +143,19 @@ public class AccessAliyunController {
         return InterfaceResult.getSuccessInterfaceResultInstance(videoPlayAuth);
     }
 
+    @ApiOperation(value = "获取视频播放地址", notes = "视频点播方式")
+    @ApiImplicitParam(name = "id", value = "阿里云的视频id", required = true, dataType = "String", paramType = "path")
+    @RequestMapping(value = { "/getPlayInfo/{id}" }, method = { RequestMethod.GET })
+    public InterfaceResult getPlayInfo(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
+        try{
+            GetPlayInfoResponse playInfo = accessAliyunService.GetPlayInfo(id);
+            return InterfaceResult.getSuccessInterfaceResultInstance(playInfo);
+        }catch (Exception e){
+            LOGGER.error("获取视频播放地址,{}",e);
+        }
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION);
+    }
+
     @ApiOperation(value = "获取视频信息", notes = "视频点播方式")
     @ApiImplicitParam(name = "id", value = "阿里云的视频id", required = true, dataType = "String", paramType = "path")
     @RequestMapping(value = { "/getVideoInfo/{id}" }, method = { RequestMethod.GET })

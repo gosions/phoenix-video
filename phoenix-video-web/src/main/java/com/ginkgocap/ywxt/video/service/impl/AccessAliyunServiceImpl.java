@@ -91,6 +91,30 @@ public class AccessAliyunServiceImpl implements AccessAliyunService {
     }
 
     /**
+     * 阿里云 视频点播 获取视频播放地址
+     *
+     * @param videoId
+     * @return
+     */
+    @Override
+    public GetPlayInfoResponse GetPlayInfo(String videoId) {
+        GetPlayInfoRequest req = new GetPlayInfoRequest();
+        req.setVideoId(videoId);
+        GetPlayInfoResponse res = null;
+        try {
+            res = vodClient.getAcsResponse(req);
+        } catch (ServerException e) {
+            e.printStackTrace();
+            throw new RuntimeException("GetPlayInfoRequest Server failed");
+        } catch (ClientException e) {
+            e.printStackTrace();
+            throw new RuntimeException("GetPlayInfoRequest Client failed");
+        }
+        LOGGER.info("获取视频播放地址,response={}", JSON.toJSONString(res));
+        return res;
+    }
+
+    /**
      * 阿里云 视频点播 获取视频上传凭证和地址
      *
      * @param tbVideo
