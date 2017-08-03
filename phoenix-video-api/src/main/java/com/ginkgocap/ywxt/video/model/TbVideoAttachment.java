@@ -1,6 +1,8 @@
 package com.ginkgocap.ywxt.video.model;
 
 import com.aliyuncs.vod.model.v20170321.GetVideoInfoResponse;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.Column;
@@ -257,5 +259,10 @@ public class TbVideoAttachment implements Serializable {
 
     public void setAliyunVideo(GetVideoInfoResponse.Video aliyunVideo) {
         this.aliyunVideo = aliyunVideo;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
     }
 }

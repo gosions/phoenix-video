@@ -1,6 +1,8 @@
 package com.ginkgocap.ywxt.video.model;
 
 import com.ginkgocap.ywxt.video.dto.UserDTO;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -424,5 +426,10 @@ public class TbVideo implements Serializable{
 
     public void setShareTime(Long shareTime) {
         this.shareTime = shareTime;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
     }
 }

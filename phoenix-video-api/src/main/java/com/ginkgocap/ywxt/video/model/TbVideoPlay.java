@@ -1,6 +1,8 @@
 package com.ginkgocap.ywxt.video.model;
 
 import com.ginkgocap.ywxt.user.model.User;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -138,5 +140,10 @@ public class TbVideoPlay implements Serializable {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
     }
 }
