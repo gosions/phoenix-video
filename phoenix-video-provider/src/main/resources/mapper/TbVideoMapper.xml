@@ -57,7 +57,7 @@
   </update>
 
   <select id="selectSearchCount" resultType="Long" parameterType="java.util.Map" >
-    select COUNT(id)
+    select COUNT(*)
     from tb_video
     <where>
       <if test="id != null and id != ''">id = #{id}</if>

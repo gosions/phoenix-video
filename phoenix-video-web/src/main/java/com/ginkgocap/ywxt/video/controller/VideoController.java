@@ -100,7 +100,7 @@ public class VideoController extends BaseController{
                     try {
                         temp.getAttachment().setAliyunVideo(accessAliyunService.getVideoInfo(temp.getAttachment().getAliyunVideoId()).getVideo());
                     } catch (Exception e) {
-                        LOGGER.error("从阿里云获取视频信息异常，{}",e);
+                        LOGGER.error("从阿里云获取视频信息异常，{},{}", e.getMessage(), e);
                     }
                 }
             }

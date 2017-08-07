@@ -56,7 +56,7 @@
     order by create_time desc limit #{startRow},#{pageSize}
   </select>
   <select id="selectAllByUserIdCount" resultType="Long" parameterType="java.util.Map" >
-    select COUNT(id)
+    select COUNT(*)
     from tb_video_enshrine
     WHERE 1=1 AND user_id = #{userId,jdbcType=BIGINT}
     order by create_time desc
