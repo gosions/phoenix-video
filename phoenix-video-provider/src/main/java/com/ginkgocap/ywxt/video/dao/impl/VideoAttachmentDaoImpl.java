@@ -47,7 +47,10 @@ public class VideoAttachmentDaoImpl extends SqlSessionDaoSupport implements Vide
 
     @Override
     public TbVideoAttachment updateByPrimaryKey(TbVideoAttachment tbVideoAttachment) {
-        //todo
-        return null;
+        int update = getSqlSession().update("tb_video_attachment.updateByPrimaryKey", tbVideoAttachment);
+        if(update > 0) {
+            return tbVideoAttachment;
+        }
+        return new TbVideoAttachment();
     }
 }

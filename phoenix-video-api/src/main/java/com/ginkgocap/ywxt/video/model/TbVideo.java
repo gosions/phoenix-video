@@ -1,5 +1,9 @@
 package com.ginkgocap.ywxt.video.model;
 
+import com.ginkgocap.ywxt.video.dto.UserDTO;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import java.io.Serializable;
@@ -19,6 +23,7 @@ public class TbVideo implements Serializable{
      * 视频标题
      */
     @NotEmpty(message = "视频标题不能为空")
+    @Length(max = 200, message = "视频标题不能超过200")
     private String title;
 
     /**
@@ -29,6 +34,7 @@ public class TbVideo implements Serializable{
     /**
      * 简介/描述
      */
+    @Length(max = 1000, message = "简介/描述不能超过1000")
     private String description;
 
     /**
@@ -65,6 +71,24 @@ public class TbVideo implements Serializable{
     private Long discussTime=0L;
 
     /**
+     * 收藏次数
+     */
+    @Column(name = "enshrine_time")
+    private Long enshrineTime=0L;
+
+    /**
+     * 分享次数
+     */
+    @Column(name = "share_time")
+    private Long shareTime=0L;
+
+    /**
+     * 视频时长
+     */
+    @Column(name = "duration")
+    private Float duration=Float.parseFloat("0.00");
+
+    /**
      * 原视频附件
      */
     @Column(name = "attachment_id")
@@ -83,6 +107,12 @@ public class TbVideo implements Serializable{
     private TbVideoAttachment transformAttachment=null;
 
     /**
+     * 置顶/取消置顶时间
+     */
+    @Column(name = "top_time")
+    private Date topTime;
+
+    /**
      * 创建时间
      */
     @Column(name = "create_time")
@@ -93,6 +123,9 @@ public class TbVideo implements Serializable{
      */
     @Column(name = "user_id")
     private Long userId;
+
+    @Transient
+    private UserDTO userDTO;
 
     public TbVideo() {
     }
@@ -353,5 +386,50 @@ public class TbVideo implements Serializable{
 
     public void setForbiddenReason(String forbiddenReason) {
         this.forbiddenReason = forbiddenReason;
+    }
+
+    public Float getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Float duration) {
+        this.duration = duration;
+    }
+
+    public UserDTO getUserDTO() {
+        return userDTO;
+    }
+
+    public void setUserDTO(UserDTO userDTO) {
+        this.userDTO = userDTO;
+    }
+
+    public Date getTopTime() {
+        return topTime;
+    }
+
+    public void setTopTime(Date topTime) {
+        this.topTime = topTime;
+    }
+
+    public Long getEnshrineTime() {
+        return enshrineTime;
+    }
+
+    public void setEnshrineTime(Long enshrineTime) {
+        this.enshrineTime = enshrineTime;
+    }
+
+    public Long getShareTime() {
+        return shareTime;
+    }
+
+    public void setShareTime(Long shareTime) {
+        this.shareTime = shareTime;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
     }
 }

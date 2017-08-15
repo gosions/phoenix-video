@@ -13,6 +13,10 @@ public interface VideoEnshrineService {
 
     TbVideoEnshrine selectByPrimaryKey(Long id);
 
+    int deleteByPrimaryKey(Long id);
+
+    TbVideoEnshrine selectByUserIdAndVideoId(Long userId, Long videoId);
+
     Map<String, Object> selectAllByVideoId(Long videoId, int currentPage, int pageSize);
 
     Map<String, Object> selectAllByUserId(Long videoId, int currentPage, int pageSize);

@@ -1,8 +1,13 @@
 package com.ginkgocap.ywxt.video.model;
 
+import com.ginkgocap.ywxt.user.model.User;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -22,6 +27,9 @@ public class TbVideoLike implements Serializable {
      */
     @Column(name = "user_id")
     private Long userId;
+
+    @Transient
+    private User user;
 
     /**
      * 创建时间
@@ -100,5 +108,18 @@ public class TbVideoLike implements Serializable {
      */
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
     }
 }

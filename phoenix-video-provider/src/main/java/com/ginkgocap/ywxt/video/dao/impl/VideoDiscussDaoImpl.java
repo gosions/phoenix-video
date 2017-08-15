@@ -63,6 +63,22 @@ public class VideoDiscussDaoImpl extends SqlSessionDaoSupport implements VideoDi
     }
 
     @Override
+    public int deleteByPrimaryKey(Long id) {
+        TbVideoDiscuss tbVideoDiscuss = selectByPrimaryKey(id);
+        final Map<String, Object> mapParam = new HashMap<String, Object>(1);
+        mapParam.put("id",id);
+        int delete = getSqlSession().delete("tb_video_discuss.deleteByPrimaryKey", mapParam);
+        if(delete > 0) {
+            TbVideo tbVideo = videoDao.selectByPrimaryKey(tbVideoDiscuss.getVideoId());
+            if(Long.valueOf("0").compareTo(tbVideo.getDiscussTime()) < 0) {
+                tbVideo.setDiscussTime(tbVideo.getDiscussTime() - 1L);
+                videoDao.updateVideo(tbVideo);
+            }
+        }
+        return  delete;
+    }
+
+    @Override
     public TbVideoDiscuss updateByPrimaryKey(TbVideoDiscuss tbVideo) {
         //todo
         return null;

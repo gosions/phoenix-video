@@ -41,7 +41,7 @@
     order by create_time desc limit #{startRow},#{pageSize}
   </select>
   <select id="selectAllByVideoIdCount" resultType="Long" parameterType="java.util.Map">
-    select COUNT(id)
+    select COUNT(*)
     from tb_video_like
     WHERE 1=1 AND video_id = #{videoId,jdbcType=BIGINT}
     order by create_time desc

@@ -1,6 +1,8 @@
 package com.ginkgocap.ywxt.video.model;
 
 import com.aliyuncs.vod.model.v20170321.GetVideoInfoResponse;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.Column;
@@ -45,11 +47,6 @@ public class TbVideoAttachment implements Serializable {
     private String downloadUrl;
 
     /**
-     * 视频时长
-     */
-    private Long duration;
-
-    /**
      * 视频截图1
      */
     @Column(name = "screenshot_url_a")
@@ -83,7 +80,7 @@ public class TbVideoAttachment implements Serializable {
      * 阿里云上对应的视频id
      */
     @Transient
-    private GetVideoInfoResponse.Video aliyunVideo;
+    private GetVideoInfoResponse.Video aliyunVideo=null;
 
     private static final long serialVersionUID = 1L;
 
@@ -177,24 +174,6 @@ public class TbVideoAttachment implements Serializable {
     }
 
     /**
-     * 获取视频时长
-     *
-     * @return duration - 视频时长
-     */
-    public Long getDuration() {
-        return duration;
-    }
-
-    /**
-     * 设置视频时长
-     *
-     * @param duration 视频时长
-     */
-    public void setDuration(Long duration) {
-        this.duration = duration;
-    }
-
-    /**
      * 获取视频截图1
      *
      * @return screenshot_url_a - 视频截图1
@@ -280,5 +259,10 @@ public class TbVideoAttachment implements Serializable {
 
     public void setAliyunVideo(GetVideoInfoResponse.Video aliyunVideo) {
         this.aliyunVideo = aliyunVideo;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
     }
 }

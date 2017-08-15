@@ -14,6 +14,10 @@ public interface VideoEnshrineDao extends ApplicationContextAware {
 
     TbVideoEnshrine selectByPrimaryKey(Long id);
 
+    int deleteByPrimaryKey(Long id);
+
+    TbVideoEnshrine selectByUserIdAndVideoId(Long userId, Long videoId);
+
     TbVideoEnshrine updateByPrimaryKey(TbVideoEnshrine tbVideoEnshrine);
 
     List<TbVideoEnshrine> selectAllByVideoId(Long videoId, int currentPage, int pageSize);

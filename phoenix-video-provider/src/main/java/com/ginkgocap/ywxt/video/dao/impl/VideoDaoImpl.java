@@ -1,5 +1,6 @@
 package com.ginkgocap.ywxt.video.dao.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.ginkgocap.ywxt.util.DateFunc;
 import com.ginkgocap.ywxt.video.dao.VideoAttachmentDao;
 import com.ginkgocap.ywxt.video.dao.VideoDao;
@@ -8,6 +9,8 @@ import com.ginkgocap.ywxt.video.model.TbVideoAttachment;
 import com.ginkgocap.ywxt.video.model.TbVideoPlay;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.support.SqlSessionDaoSupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Repository;
@@ -25,6 +28,8 @@ import java.util.Map;
 public class VideoDaoImpl extends SqlSessionDaoSupport implements VideoDao{
 
     private ApplicationContext applicationContext;
+
+    private final Logger logger = LoggerFactory.getLogger(VideoDiscussDaoImpl.class);
 
     @Resource
     private VideoAttachmentDao videoAttachmentDao;
@@ -55,6 +60,7 @@ public class VideoDaoImpl extends SqlSessionDaoSupport implements VideoDao{
                 tbVideo.setTransformAttachment(tbVideoAttachment);
             }
         }
+        tbVideo.setTopTime(date);
         tbVideo.setCreateTime(date);
         int insert = getSqlSession().insert("tb_video.insert", tbVideo);
         setSqlSessionFactory(sqlSessionFactory);
@@ -92,6 +98,9 @@ public class VideoDaoImpl extends SqlSessionDaoSupport implements VideoDao{
     public TbVideo updateVideo(TbVideo tbVideo) {
         int update = getSqlSession().update("tb_video.updateByPrimaryKey", tbVideo);
         if(update > 0) {
+            if(null != tbVideo.getAttachment()) {
+                videoAttachmentDao.updateByPrimaryKey(tbVideo.getAttachment());
+            }
             return selectByPrimaryKey(tbVideo.getId());
         }
         return new TbVideo();
@@ -104,7 +113,18 @@ public class VideoDaoImpl extends SqlSessionDaoSupport implements VideoDao{
 
     @Override
     public List<TbVideo> selectSearch(Map<String, Object> searchParams) {
-        return getSqlSession().selectList("tb_video.selectSearch", searchParams);
+        List<TbVideo> list = getSqlSession().selectList("tb_video.selectSearch", searchParams);
+        for (TbVideo temp:list) {
+            if(null != temp.getAttachmentId()){
+                TbVideoAttachment attachment = videoAttachmentDao.selectByPrimaryKey(temp.getAttachmentId());
+                temp.setAttachment(attachment);
+            }
+            if(null != temp.getTransformAttachmentId()){
+                TbVideoAttachment attachment = videoAttachmentDao.selectByPrimaryKey(temp.getTransformAttachmentId());
+                temp.setTransformAttachment(attachment);
+            }
+        }
+        return list;
     }
 
 }
