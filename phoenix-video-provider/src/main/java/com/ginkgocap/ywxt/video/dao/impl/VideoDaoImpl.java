@@ -86,7 +86,7 @@ public class VideoDaoImpl extends SqlSessionDaoSupport implements VideoDao{
             }
             return tbVideo;
         }
-        return new TbVideo();
+        return null;
     }
 
     @Override

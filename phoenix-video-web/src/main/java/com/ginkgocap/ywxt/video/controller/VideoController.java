@@ -2,6 +2,12 @@ package com.ginkgocap.ywxt.video.controller;
 
 import com.alibaba.dubbo.common.json.JSON;
 import com.aliyuncs.vod.model.v20170321.GetVideoInfoResponse;
+import com.ginkgocap.ywxt.track.entity.constant.BusinessModelEnum;
+import com.ginkgocap.ywxt.track.entity.constant.MethodTypeEnum;
+import com.ginkgocap.ywxt.track.entity.constant.OptTypeEnum;
+import com.ginkgocap.ywxt.track.entity.constant.ServerTypeEnum;
+import com.ginkgocap.ywxt.track.entity.model.TbBusinessTrack;
+import com.ginkgocap.ywxt.track.entity.util.IPUtils;
 import com.ginkgocap.ywxt.util.DateFunc;
 import com.ginkgocap.ywxt.video.constant.MediaTypes;
 import com.ginkgocap.ywxt.video.constant.VideoStatusEnum;
@@ -15,9 +21,11 @@ import com.ginkgocap.ywxt.video.utils.validation.ValidationUtils;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
 import com.google.common.base.Strings;
+
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +34,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -39,6 +48,8 @@ import java.util.Map;
 public class VideoController extends BaseController{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VideoController.class);
+
+    private static final Logger TRACK_LOGGER = LoggerFactory.getLogger("trackLog");
 
     @Resource
     private VideoService videoService;
@@ -68,6 +79,22 @@ public class VideoController extends BaseController{
             }
             TbVideo insertVideo = videoService.insertVideo(tbVideo);
             if (null != insertVideo) {
+                try {
+                    TbBusinessTrack tbBusinessTrack = new TbBusinessTrack();
+                    tbBusinessTrack.setBusinessModel(BusinessModelEnum.BUSINESS_VIDEO.getKey());
+                    tbBusinessTrack.setOptType(OptTypeEnum.OPT_ADD.getKey());
+                    tbBusinessTrack.setServerType(ServerTypeEnum.SERVICE_INTERFACE.getKey());
+                    tbBusinessTrack.setClientIp(IPUtils.getRemoteAddr(request));
+                    tbBusinessTrack.setUrl(request.getRequestURL().toString() + (request.getQueryString() == null ? "" : ("?" + request.getQueryString())));
+                    tbBusinessTrack.setMethodType(MethodTypeEnum.REQUEST_METHOD_PUT.getKey());
+                    tbBusinessTrack.setUserAgent(request.getHeader("User-Agent"));
+                    tbBusinessTrack.setParameter(tbVideo.toString());
+                    tbBusinessTrack.setGmtCreate(new Timestamp(new Date().getTime()));
+                    tbBusinessTrack.setUserId(tbVideo.getUserId());
+                    TRACK_LOGGER.info(tbBusinessTrack.toString());
+                }catch (Exception e){
+                    LOGGER.error("GET TRACK_LOGGER EXCEPTION, {},{}", e.getStackTrace(), e);
+                }
                 return InterfaceResult.getSuccessInterfaceResultInstance(insertVideo);
             }
         } catch (Exception e) {
@@ -130,6 +157,22 @@ public class VideoController extends BaseController{
                     LOGGER.error("从阿里云获取视频信息异常，{}",e);
                 }
             }
+            try {
+                TbBusinessTrack tbBusinessTrack = new TbBusinessTrack();
+                tbBusinessTrack.setBusinessModel(BusinessModelEnum.BUSINESS_VIDEO.getKey());
+                tbBusinessTrack.setOptType(OptTypeEnum.OPT_VIEW.getKey());
+                tbBusinessTrack.setServerType(ServerTypeEnum.SERVICE_INTERFACE.getKey());
+                tbBusinessTrack.setClientIp(IPUtils.getRemoteAddr(request));
+                tbBusinessTrack.setUrl(request.getRequestURL().toString() + (request.getQueryString() == null ? "" : ("?" + request.getQueryString())));
+                tbBusinessTrack.setMethodType(MethodTypeEnum.REQUEST_METHOD_GET.getKey());
+                tbBusinessTrack.setUserAgent(request.getHeader("User-Agent"));
+                tbBusinessTrack.setParameter(null);
+                tbBusinessTrack.setGmtCreate(new Timestamp(new Date().getTime()));
+                tbBusinessTrack.setUserId(null);
+                TRACK_LOGGER.info(tbBusinessTrack.toString());
+            }catch (Exception e){
+                LOGGER.error("GET TRACK_LOGGER EXCEPTION, {},{}", e.getStackTrace(), e);
+            }
             return InterfaceResult.getSuccessInterfaceResultInstance(result);
         } catch (Exception e) {
             LOGGER.error("获取视频异常，{}",e);
@@ -159,6 +202,22 @@ public class VideoController extends BaseController{
                 } catch (Exception e) {
                     LOGGER.error("从阿里云获取视频信息异常，{}",e);
                 }
+            }
+            try {
+                TbBusinessTrack tbBusinessTrack = new TbBusinessTrack();
+                tbBusinessTrack.setBusinessModel(BusinessModelEnum.BUSINESS_VIDEO.getKey());
+                tbBusinessTrack.setOptType(OptTypeEnum.OPT_VIEW.getKey());
+                tbBusinessTrack.setServerType(ServerTypeEnum.SERVICE_INTERFACE.getKey());
+                tbBusinessTrack.setClientIp(IPUtils.getRemoteAddr(request));
+                tbBusinessTrack.setUrl(request.getRequestURL().toString() + (request.getQueryString() == null ? "" : ("?" + request.getQueryString())));
+                tbBusinessTrack.setMethodType(MethodTypeEnum.REQUEST_METHOD_GET.getKey());
+                tbBusinessTrack.setUserAgent(request.getHeader("User-Agent"));
+                tbBusinessTrack.setParameter(null);
+                tbBusinessTrack.setGmtCreate(new Timestamp(new Date().getTime()));
+                tbBusinessTrack.setUserId(personId);
+                TRACK_LOGGER.info(tbBusinessTrack.toString());
+            }catch (Exception e){
+                LOGGER.error("GET TRACK_LOGGER EXCEPTION, {},{}", e.getStackTrace(), e);
             }
             return InterfaceResult.getSuccessInterfaceResultInstance(result);
         } catch (Exception e) {
