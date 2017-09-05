@@ -82,6 +82,7 @@ public class VideoController extends BaseController{
                 try {
                     TbBusinessTrack tbBusinessTrack = new TbBusinessTrack();
                     tbBusinessTrack.setBusinessModel(BusinessModelEnum.BUSINESS_VIDEO.getKey());
+                    tbBusinessTrack.setBusinessModelId(insertVideo.getId());
                     tbBusinessTrack.setOptType(OptTypeEnum.OPT_ADD.getKey());
                     tbBusinessTrack.setServerType(ServerTypeEnum.SERVICE_INTERFACE.getKey());
                     tbBusinessTrack.setClientIp(IPUtils.getRemoteAddr(request));
@@ -93,7 +94,7 @@ public class VideoController extends BaseController{
                     tbBusinessTrack.setUserId(tbVideo.getUserId());
                     TRACK_LOGGER.info(tbBusinessTrack.toString());
                 }catch (Exception e){
-                    LOGGER.error("GET TRACK_LOGGER EXCEPTION, {},{}", e.getStackTrace(), e);
+                    LOGGER.error("GET TRACK_LOGGER EXCEPTION, {},{}", e.getMessage(), e);
                 }
                 return InterfaceResult.getSuccessInterfaceResultInstance(insertVideo);
             }
@@ -171,7 +172,7 @@ public class VideoController extends BaseController{
                 tbBusinessTrack.setUserId(null);
                 TRACK_LOGGER.info(tbBusinessTrack.toString());
             }catch (Exception e){
-                LOGGER.error("GET TRACK_LOGGER EXCEPTION, {},{}", e.getStackTrace(), e);
+                LOGGER.error("GET TRACK_LOGGER EXCEPTION, {},{}", e.getMessage(), e);
             }
             return InterfaceResult.getSuccessInterfaceResultInstance(result);
         } catch (Exception e) {
@@ -217,7 +218,7 @@ public class VideoController extends BaseController{
                 tbBusinessTrack.setUserId(personId);
                 TRACK_LOGGER.info(tbBusinessTrack.toString());
             }catch (Exception e){
-                LOGGER.error("GET TRACK_LOGGER EXCEPTION, {},{}", e.getStackTrace(), e);
+                LOGGER.error("GET TRACK_LOGGER EXCEPTION, {},{}", e.getMessage(), e);
             }
             return InterfaceResult.getSuccessInterfaceResultInstance(result);
         } catch (Exception e) {
