@@ -590,5 +590,13 @@
 				</filters>
 			</build>
 		</profile>
+		<profile>
+			<id>online_test</id>
+			<build>
+				<filters>
+					<filter>../online_test.properties</filter>
+				</filters>
+			</build>
+		</profile>
 	</profiles>
 </project>
