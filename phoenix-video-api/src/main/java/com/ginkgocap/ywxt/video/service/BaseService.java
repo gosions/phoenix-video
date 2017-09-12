@@ -8,4 +8,6 @@ import com.ginkgocap.ywxt.user.model.User;
 public interface BaseService {
 
     User handleUserPicPath(Long userId);
+
+    Boolean isFollowOrganization(Long userId, Long personId);
 }

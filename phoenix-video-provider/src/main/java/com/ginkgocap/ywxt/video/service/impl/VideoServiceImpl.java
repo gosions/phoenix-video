@@ -38,9 +38,6 @@ public class VideoServiceImpl extends BaseServiceImpl implements VideoService {
     @Autowired
     private VideoEnshrineDao videoEnshrineDao;
 
-    @Autowired
-    private OrganFollowService organFollowService;
-
     @Override
     public TbVideo insertVideo(TbVideo tbVideo) {
         return videoDao.insertVideo(tbVideo);
@@ -65,8 +62,7 @@ public class VideoServiceImpl extends BaseServiceImpl implements VideoService {
             if(null != user) {
                 UserDTO userDTO = new UserDTO();
                 if(user.isVirtual()){
-                    boolean flag = organFollowService.whetherExist(user.getId(), Long.parseLong(personId.toString()));
-                    userDTO.setIsfollow(flag);
+                    userDTO.setIsfollow(isFollowOrganization(user.getId(), personId));
                 }
                 //是否收藏该视频
                 TbVideoEnshrine tbVideoEnshrine = videoEnshrineDao.selectByUserIdAndVideoId(Long.parseLong(personId.toString()), tbVideo.getId());
@@ -114,7 +110,7 @@ public class VideoServiceImpl extends BaseServiceImpl implements VideoService {
                     if(null != personId && !"".equals(personId)) {
                         //是否关注组织
                         if(user.isVirtual()){
-                            boolean flag = organFollowService.whetherExist(user.getId(), Long.parseLong(personId.toString()));
+                            boolean flag = isFollowOrganization(user.getId(), Long.parseLong(personId.toString()));
                             logger.info("是否关注flag={}", flag);
                             if(user.getId() == Long.parseLong(personId.toString())) {
                                 flag = true;

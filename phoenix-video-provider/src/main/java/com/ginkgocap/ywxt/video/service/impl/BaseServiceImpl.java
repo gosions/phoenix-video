@@ -1,5 +1,6 @@
 package com.ginkgocap.ywxt.video.service.impl;
 
+import com.ginkgocap.ywxt.organ.service.organ.OrganFollowService;
 import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.user.service.UserService;
 import com.ginkgocap.ywxt.video.service.BaseService;
@@ -12,6 +13,9 @@ import org.springframework.stereotype.Service;
  */
 @Service("videoBaseService")
 public class BaseServiceImpl implements BaseService{
+
+    @Autowired
+    private OrganFollowService organFollowService;
 
     @Autowired
     private UserService userService;
@@ -31,5 +35,10 @@ public class BaseServiceImpl implements BaseService{
             return user;
         }
         return null;
+    }
+
+    @Override
+    public Boolean isFollowOrganization(Long userId, Long personId) {
+        return organFollowService.whetherExist(userId, personId);
     }
 }
