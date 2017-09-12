@@ -60,7 +60,9 @@ public class VideoServiceImpl implements VideoService {
             if(null != user) {
                 UserDTO userDTO = new UserDTO();
                 if(null != user.getPicPath()) {
-                    user.setPicPath(nginxRoot + user.getPicPath());
+                    if ( !user.getPicPath().contains("http")) {
+                        user.setPicPath(nginxRoot + user.getPicPath());
+                    }
                 }
                 userDTO.setUser(user);
                 tbVideo.setUserDTO(userDTO);
@@ -125,7 +127,9 @@ public class VideoServiceImpl implements VideoService {
                 if(null != user) {
                     UserDTO userDTO = new UserDTO();
                     if(null != user.getPicPath()) {
-                        user.setPicPath(nginxRoot + user.getPicPath());
+                        if ( !user.getPicPath().contains("http")) {
+                            user.setPicPath(nginxRoot + user.getPicPath());
+                        }
                     }
                     userDTO.setUser(user);
                     //个人用户

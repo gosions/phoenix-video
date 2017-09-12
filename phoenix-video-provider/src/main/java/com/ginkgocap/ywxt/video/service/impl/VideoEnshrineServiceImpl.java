@@ -64,7 +64,9 @@ public class VideoEnshrineServiceImpl implements VideoEnshrineService {
                 User user = userService.findUserByUserId(temp.getUserId());
                 if(null != user) {
                     if(null != user.getPicPath()) {
-                        user.setPicPath(nginxRoot + user.getPicPath());
+                        if ( !user.getPicPath().contains("http")) {
+                            user.setPicPath(nginxRoot + user.getPicPath());
+                        }
                     }
                     temp.setUser(user);
                 }

@@ -42,7 +42,9 @@ public class VideoDiscussServiceImpl implements VideoDiscussService {
             User user = userService.findUserByUserId(videoDiscuss.getUserId());
             if(null != user) {
                 if(null != user.getPicPath()) {
-                    user.setPicPath(nginxRoot + user.getPicPath());
+                    if ( !user.getPicPath().contains("http")) {
+                        user.setPicPath(nginxRoot + user.getPicPath());
+                    }
                 }
                 videoDiscuss.setUser(user);
             }
