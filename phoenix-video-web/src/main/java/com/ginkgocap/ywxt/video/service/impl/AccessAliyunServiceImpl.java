@@ -42,6 +42,8 @@ public class AccessAliyunServiceImpl implements AccessAliyunService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AccessAliyunServiceImpl.class);
 
+    private static final long EXPIRE = 1 * 30 * 60;
+
     @Resource
     private IRedisService iRedisService;
 
@@ -205,7 +207,7 @@ public class AccessAliyunServiceImpl implements AccessAliyunService {
                 if (null != res.getVideo() && "Normal".equals(res.getVideo().getStatus())) {
                     LOGGER.info("放入redis中，key={}", videoId);
                     s = JSONUtil.toJson(res);
-                    iRedisService.set(videoId, s, 7 * 24 * 60 * 60);
+                    iRedisService.set(videoId, s, EXPIRE);
                 }
             }
             res = JSONUtil.toBean(s, GetVideoInfoResponse.class);
@@ -242,7 +244,7 @@ public class AccessAliyunServiceImpl implements AccessAliyunService {
             if (null != videoInfo && "Normal".equals(videoInfo.getVideo().getStatus())) {
                 LOGGER.info("更新redis，key={}", videoDTO.getAliyunVideoId());
                 iRedisService.del(videoDTO.getAliyunVideoId());
-                iRedisService.set(videoDTO.getAliyunVideoId(), JSONUtil.toJson(res), 7 * 24 * 60 * 60);
+                iRedisService.set(videoDTO.getAliyunVideoId(), JSONUtil.toJson(res), EXPIRE);
             }
         } catch (ServerException e) {
             e.printStackTrace();
