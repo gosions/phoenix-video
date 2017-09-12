@@ -165,8 +165,7 @@ public class AccessAliyunController {
         if(null == s) {
             GetVideoInfoResponse videoInfo = accessAliyunService.getVideoInfo(id);
             s = JSONUtil.toJson(videoInfo);
-            iRedisService.set(id, s);
-            iRedisService.expire(id, 1*30*60);
+            iRedisService.set(id, s, 1 * 24 * 60 * 60);
         }
         return InterfaceResult.getSuccessInterfaceResultInstance(JSONUtil.toBean(s, GetVideoInfoResponse.class));
     }
