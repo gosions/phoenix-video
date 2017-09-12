@@ -21,19 +21,12 @@ import java.util.Map;
  * Created by gintong on 2017/5/25.
  */
 @Service("videoPlayService")
-public class VideoPlayServiceImpl implements VideoPlayService {
+public class VideoPlayServiceImpl extends BaseServiceImpl implements VideoPlayService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private VideoPlayDao videoPlayDao;
-
-    @Autowired
-    private UserService userService;
-
-    @Value("${nginx.root}")
-    private String nginxRoot;
-
 
     @Override
     public TbVideoPlay insertVideoPlay(TbVideoPlay tbVideoPlay) {
@@ -52,15 +45,7 @@ public class VideoPlayServiceImpl implements VideoPlayService {
         List<TbVideoPlay> list = videoPlayDao.selectAllByVideoId(videoId, page.getPageStartRow(), pageSize);
         for (TbVideoPlay temp:list) {
             if(null != temp.getUserId()) {
-                User user = userService.findUserByUserId(temp.getUserId());
-                if(null != user) {
-                    if(null != user.getPicPath()) {
-                        if ( !user.getPicPath().contains("http")) {
-                            user.setPicPath(nginxRoot + user.getPicPath());
-                        }
-                    }
-                    temp.setUser(user);
-                }
+                temp.setUser(handleUserPicPath(temp.getUserId()));
             }
         }
         if(count<=0){

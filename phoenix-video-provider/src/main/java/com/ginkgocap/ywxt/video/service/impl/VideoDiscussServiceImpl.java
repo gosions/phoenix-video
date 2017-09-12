@@ -21,33 +21,18 @@ import java.util.Map;
  * Created by gintong on 2017/5/25.
  */
 @Service("videoDiscussService")
-public class VideoDiscussServiceImpl implements VideoDiscussService {
+public class VideoDiscussServiceImpl extends BaseServiceImpl implements VideoDiscussService {
 
     private final Logger logger = LoggerFactory.getLogger(VideoDiscussServiceImpl.class);
 
     @Autowired
     private VideoDiscussDao videoDiscussDao;
 
-    @Autowired
-    private UserService userService;
-
-    @Value("${nginx.root}")
-    private String nginxRoot;
-
-
     @Override
     public TbVideoDiscuss insertVideoDiscuss(TbVideoDiscuss tbVideoDiscuss) {
         TbVideoDiscuss videoDiscuss = videoDiscussDao.insertVideoDiscuss(tbVideoDiscuss);
         if( null != videoDiscuss && null != videoDiscuss.getUserId()) {
-            User user = userService.findUserByUserId(videoDiscuss.getUserId());
-            if(null != user) {
-                if(null != user.getPicPath()) {
-                    if ( !user.getPicPath().contains("http")) {
-                        user.setPicPath(nginxRoot + user.getPicPath());
-                    }
-                }
-                videoDiscuss.setUser(user);
-            }
+            videoDiscuss.setUser(handleUserPicPath(videoDiscuss.getUserId()));
         }
         return videoDiscuss;
     }
@@ -71,13 +56,7 @@ public class VideoDiscussServiceImpl implements VideoDiscussService {
         List<TbVideoDiscuss> list = videoDiscussDao.selectAllByVideoId(videoId, page.getPageStartRow(), pageSize);
         for (TbVideoDiscuss temp:list) {
             if(null != temp.getUserId()) {
-                User user = userService.findUserByUserId(temp.getUserId());
-                if(null != user) {
-                    if(null != user.getPicPath()) {
-                        user.setPicPath(nginxRoot + user.getPicPath());
-                    }
-                    temp.setUser(user);
-                }
+                temp.setUser(handleUserPicPath(temp.getUserId()));
             }
         }
         if(count<=0){

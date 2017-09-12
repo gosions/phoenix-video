@@ -21,18 +21,12 @@ import java.util.Map;
  * Created by gintong on 2017/5/25.
  */
 @Service("videoShareService")
-public class VideoShareServiceImpl implements VideoShareService {
+public class VideoShareServiceImpl extends BaseServiceImpl implements VideoShareService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private VideoShareDao videoShareDao;
-
-    @Autowired
-    private UserService userService;
-
-    @Value("${nginx.root}")
-    private String nginxRoot;
 
     @Override
     public TbVideoShare insertVideoShare(TbVideoShare tbVideoShare) {
@@ -51,15 +45,7 @@ public class VideoShareServiceImpl implements VideoShareService {
         List<TbVideoShare> list = videoShareDao.selectAllByVideoId(videoId, page.getPageStartRow(), pageSize);
         for (TbVideoShare temp:list) {
             if(null != temp.getUserId()) {
-                User user = userService.findUserByUserId(temp.getUserId());
-                if(null != user) {
-                    if(null != user.getPicPath()) {
-                        if ( !user.getPicPath().contains("http")) {
-                            user.setPicPath(nginxRoot + user.getPicPath());
-                        }
-                    }
-                    temp.setUser(user);
-                }
+                temp.setUser(handleUserPicPath(temp.getUserId()));
             }
         }
         if(count<=0){

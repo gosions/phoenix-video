@@ -21,18 +21,12 @@ import java.util.Map;
  * Created by gintong on 2017/5/25.
  */
 @Service("videoLikeService")
-public class VideoLikeServiceImpl implements VideoLikeService {
+public class VideoLikeServiceImpl extends BaseServiceImpl implements VideoLikeService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private VideoLikeDao videoLikeDao;
-
-    @Autowired
-    private UserService userService;
-
-    @Value("${nginx.root}")
-    private String nginxRoot;
 
     @Override
     public TbVideoLike insertVideoLike(TbVideoLike tbVideoLike) {
@@ -51,15 +45,7 @@ public class VideoLikeServiceImpl implements VideoLikeService {
         List<TbVideoLike> list = videoLikeDao.selectAllByVideoId(videoId, page.getPageStartRow(), pageSize);
         for (TbVideoLike temp:list) {
             if(null != temp.getUserId()) {
-                User user = userService.findUserByUserId(temp.getUserId());
-                if(null != user) {
-                    if(null != user.getPicPath()) {
-                        if ( !user.getPicPath().contains("http")) {
-                            user.setPicPath(nginxRoot + user.getPicPath());
-                        }
-                    }
-                    temp.setUser(user);
-                }
+                temp.setUser(handleUserPicPath(temp.getUserId()));
             }
         }
         if(count<=0){
