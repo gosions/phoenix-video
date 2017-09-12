@@ -77,7 +77,9 @@ public class VideoServiceImpl implements VideoService {
             if(null != user) {
                 UserDTO userDTO = new UserDTO();
                 if(null != user.getPicPath()) {
-                    user.setPicPath(nginxRoot + user.getPicPath());
+                    if ( !user.getPicPath().contains("http://")) {
+                        user.setPicPath(nginxRoot + user.getPicPath());
+                    }
                 }
                 if(user.isVirtual()){
                     boolean flag = organFollowService.whetherExist(user.getId(), Long.parseLong(personId.toString()));
