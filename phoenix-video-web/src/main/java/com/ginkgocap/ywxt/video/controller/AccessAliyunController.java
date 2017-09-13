@@ -160,14 +160,8 @@ public class AccessAliyunController {
     @ApiImplicitParam(name = "id", value = "阿里云的视频id", required = true, dataType = "String", paramType = "path")
     @RequestMapping(value = { "/getVideoInfo/{id}" }, method = { RequestMethod.GET })
     public InterfaceResult getVideoInfo(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
-        String s = iRedisService.get(id);
-        LOGGER.info("先从redis中获取，s={}",s);
-        if(null == s) {
-            GetVideoInfoResponse videoInfo = accessAliyunService.getVideoInfo(id);
-            s = JSONUtil.toJson(videoInfo);
-            iRedisService.set(id, s, 1 * 24 * 60 * 60);
-        }
-        return InterfaceResult.getSuccessInterfaceResultInstance(JSONUtil.toBean(s, GetVideoInfoResponse.class));
+        GetVideoInfoResponse videoInfo = accessAliyunService.getVideoInfo(id);
+        return InterfaceResult.getSuccessInterfaceResultInstance(videoInfo);
     }
 
     @ApiOperation(value = "获取视频上传凭证和地址", notes = "视频点播方式")
