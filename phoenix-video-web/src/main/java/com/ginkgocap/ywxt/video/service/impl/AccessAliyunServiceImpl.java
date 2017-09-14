@@ -201,13 +201,13 @@ public class AccessAliyunServiceImpl implements AccessAliyunService {
         GetVideoInfoResponse res = null;
         try {
             String s = iRedisService.get(videoId);
-            LOGGER.info("先从redis中获取，s={}", s);
+            LOGGER.info("先从redis中获取，s = {}", s);
             if(null == s) {
                 res = vodClient.getAcsResponse(req);
                 if (null != res.getVideo() && "Normal".equals(res.getVideo().getStatus())) {
-                    LOGGER.info("放入redis中，key={}", videoId);
                     s = JSONUtil.toJson(res);
                     iRedisService.set(videoId, s, EXPIRE);
+                    LOGGER.info("放入redis中，key = {}， expire = {}", videoId, EXPIRE);
                 }
             }
             res = JSONUtil.toBean(s, GetVideoInfoResponse.class);
@@ -242,9 +242,9 @@ public class AccessAliyunServiceImpl implements AccessAliyunService {
             res = vodClient.getAcsResponse(req);
             GetVideoInfoResponse videoInfo = getVideoInfo(videoDTO.getAliyunVideoId());
             if (null != videoInfo && "Normal".equals(videoInfo.getVideo().getStatus())) {
-                LOGGER.info("更新redis，key={}", videoDTO.getAliyunVideoId());
                 iRedisService.del(videoDTO.getAliyunVideoId());
                 iRedisService.set(videoDTO.getAliyunVideoId(), JSONUtil.toJson(res), EXPIRE);
+                LOGGER.info("更新redis，key = {}， expire = {}", videoDTO.getAliyunVideoId(), EXPIRE);
             }
         } catch (ServerException e) {
             e.printStackTrace();
@@ -270,7 +270,7 @@ public class AccessAliyunServiceImpl implements AccessAliyunService {
         DeleteVideoResponse res = null;
         try {
             res = vodClient.getAcsResponse(req);
-            LOGGER.info("删除redis，key={}", videoIds);
+            LOGGER.info("删除redis，key = {}", videoIds);
             iRedisService.del(videoIds);
         } catch (ServerException e) {
             e.printStackTrace();
