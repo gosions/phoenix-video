@@ -7,6 +7,7 @@ import com.ginkgocap.ywxt.track.entity.constant.MethodTypeEnum;
 import com.ginkgocap.ywxt.track.entity.constant.OptTypeEnum;
 import com.ginkgocap.ywxt.track.entity.constant.ServerTypeEnum;
 import com.ginkgocap.ywxt.track.entity.model.TbBusinessTrack;
+import com.ginkgocap.ywxt.track.entity.util.BusinessTrackUtils;
 import com.ginkgocap.ywxt.track.entity.util.IPUtils;
 import com.ginkgocap.ywxt.util.DateFunc;
 import com.ginkgocap.ywxt.video.constant.MediaTypes;
@@ -79,23 +80,8 @@ public class VideoController extends BaseController{
             }
             TbVideo insertVideo = videoService.insertVideo(tbVideo);
             if (null != insertVideo) {
-                try {
-                    TbBusinessTrack tbBusinessTrack = new TbBusinessTrack();
-                    tbBusinessTrack.setBusinessModel(BusinessModelEnum.BUSINESS_VIDEO.getKey());
-                    tbBusinessTrack.setBusinessModelId(insertVideo.getId());
-                    tbBusinessTrack.setOptType(OptTypeEnum.OPT_ADD.getKey());
-                    tbBusinessTrack.setServerType(ServerTypeEnum.SERVICE_INTERFACE.getKey());
-                    tbBusinessTrack.setClientIp(IPUtils.getRemoteAddr(request));
-                    tbBusinessTrack.setUrl(request.getRequestURL().toString() + (request.getQueryString() == null ? "" : ("?" + request.getQueryString())));
-                    tbBusinessTrack.setMethodType(MethodTypeEnum.REQUEST_METHOD_PUT.getKey());
-                    tbBusinessTrack.setUserAgent(request.getHeader("User-Agent"));
-                    tbBusinessTrack.setParameter(tbVideo.toString());
-                    tbBusinessTrack.setGmtCreate(new Timestamp(new Date().getTime()));
-                    tbBusinessTrack.setUserId(tbVideo.getUserId());
-                    TRACK_LOGGER.info(tbBusinessTrack.toString());
-                }catch (Exception e){
-                    LOGGER.error("GET TRACK_LOGGER EXCEPTION, {},{}", e.getMessage(), e);
-                }
+                BusinessTrackUtils.addTbBusinessTrackLog4AddOpt(LOGGER, TRACK_LOGGER, BusinessModelEnum.BUSINESS_VIDEO.getKey(),
+                        insertVideo.getId(), null, request, tbVideo.getUserId(), null);
                 return InterfaceResult.getSuccessInterfaceResultInstance(insertVideo);
             }
         } catch (Exception e) {
@@ -158,22 +144,8 @@ public class VideoController extends BaseController{
                     LOGGER.error("从阿里云获取视频信息异常，{}",e);
                 }
             }
-            try {
-                TbBusinessTrack tbBusinessTrack = new TbBusinessTrack();
-                tbBusinessTrack.setBusinessModel(BusinessModelEnum.BUSINESS_VIDEO.getKey());
-                tbBusinessTrack.setOptType(OptTypeEnum.OPT_VIEW.getKey());
-                tbBusinessTrack.setServerType(ServerTypeEnum.SERVICE_INTERFACE.getKey());
-                tbBusinessTrack.setClientIp(IPUtils.getRemoteAddr(request));
-                tbBusinessTrack.setUrl(request.getRequestURL().toString() + (request.getQueryString() == null ? "" : ("?" + request.getQueryString())));
-                tbBusinessTrack.setMethodType(MethodTypeEnum.REQUEST_METHOD_GET.getKey());
-                tbBusinessTrack.setUserAgent(request.getHeader("User-Agent"));
-                tbBusinessTrack.setParameter(null);
-                tbBusinessTrack.setGmtCreate(new Timestamp(new Date().getTime()));
-                tbBusinessTrack.setUserId(null);
-                TRACK_LOGGER.info(tbBusinessTrack.toString());
-            }catch (Exception e){
-                LOGGER.error("GET TRACK_LOGGER EXCEPTION, {},{}", e.getMessage(), e);
-            }
+            BusinessTrackUtils.addTbBusinessTrackLog4ViewOpt(LOGGER, TRACK_LOGGER, BusinessModelEnum.BUSINESS_VIDEO.getKey(),
+                    id, null, request, null, null);
             return InterfaceResult.getSuccessInterfaceResultInstance(result);
         } catch (Exception e) {
             LOGGER.error("获取视频异常，{}",e);
@@ -204,22 +176,8 @@ public class VideoController extends BaseController{
                     LOGGER.error("从阿里云获取视频信息异常，{}",e);
                 }
             }
-            try {
-                TbBusinessTrack tbBusinessTrack = new TbBusinessTrack();
-                tbBusinessTrack.setBusinessModel(BusinessModelEnum.BUSINESS_VIDEO.getKey());
-                tbBusinessTrack.setOptType(OptTypeEnum.OPT_VIEW.getKey());
-                tbBusinessTrack.setServerType(ServerTypeEnum.SERVICE_INTERFACE.getKey());
-                tbBusinessTrack.setClientIp(IPUtils.getRemoteAddr(request));
-                tbBusinessTrack.setUrl(request.getRequestURL().toString() + (request.getQueryString() == null ? "" : ("?" + request.getQueryString())));
-                tbBusinessTrack.setMethodType(MethodTypeEnum.REQUEST_METHOD_GET.getKey());
-                tbBusinessTrack.setUserAgent(request.getHeader("User-Agent"));
-                tbBusinessTrack.setParameter(null);
-                tbBusinessTrack.setGmtCreate(new Timestamp(new Date().getTime()));
-                tbBusinessTrack.setUserId(personId);
-                TRACK_LOGGER.info(tbBusinessTrack.toString());
-            }catch (Exception e){
-                LOGGER.error("GET TRACK_LOGGER EXCEPTION, {},{}", e.getMessage(), e);
-            }
+            BusinessTrackUtils.addTbBusinessTrackLog4ViewOpt(LOGGER, TRACK_LOGGER, BusinessModelEnum.BUSINESS_VIDEO.getKey(),
+                    id, null, request, personId, null);
             return InterfaceResult.getSuccessInterfaceResultInstance(result);
         } catch (Exception e) {
             LOGGER.error("获取视频异常，{}",e);

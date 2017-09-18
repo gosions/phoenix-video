@@ -7,7 +7,7 @@
     <property resource="logback.properties"/>
     <!--<property name="logPath" value="/home/logs${contextPath}"/>-->
     <property name="logPath" value="./logs${contextPath}"/>
-    <property name="maxHistory" value="1"/>
+    <property name="maxHistory" value="30"/>
     <property name="charset" value="UTF-8"/>
 
     <appender name="rootConsoleDebug" class="ch.qos.logback.core.ConsoleAppender">
