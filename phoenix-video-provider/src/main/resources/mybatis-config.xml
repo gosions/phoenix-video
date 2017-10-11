@@ -17,7 +17,7 @@
          <typeAlias alias="videoLike" type="com.ginkgocap.ywxt.video.model.TbVideoLike" />
          <typeAlias alias="videoReport" type="com.ginkgocap.ywxt.video.model.TbVideoReport" />
          <typeAlias alias="videoShare" type="com.ginkgocap.ywxt.video.model.TbVideoShare" />
-         <typeAlias alias="ideoAttachment" type="com.ginkgocap.ywxt.video.model.TbVideoAttachment" />
+         <typeAlias alias="videoAttachment" type="com.ginkgocap.ywxt.video.model.TbVideoAttachment" />
     </typeAliases>
 <!--    <plugins>
         <plugin interceptor="com.ginkgocap.ywxt.video.util.PageHelper"></plugin>
