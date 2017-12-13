@@ -1,4 +1,4 @@
-package com.ginkgocap.ywxt.video;
+/*package com.ginkgocap.ywxt.video;
 
 import javafx.application.Application;
 import org.junit.Test;
@@ -19,4 +19,4 @@ public class PhoenixVideoUiApplicationTests {
 		System.out.println(appID);
 	}
 
-}
+}*/
