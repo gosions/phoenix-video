@@ -11,12 +11,16 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -57,7 +61,7 @@ public class BaseManager {
         requestConfig = configBuilder.build();
     }
 
-    protected HttpPost getHeader(final String apiUrl) {
+    protected HttpPost getHeader(final String apiUrl, final String contentType) {
         HttpPost httpPost = new HttpPost(apiUrl);
         httpPost.setConfig(requestConfig);
 
@@ -70,47 +74,59 @@ public class BaseManager {
         httpPost.addHeader("Nonce", nonce);
         httpPost.addHeader("CurTime", curTime);
         httpPost.addHeader("CheckSum", checkSum);
-        httpPost.addHeader("Content-Type", MediaTypes.NETEASE_UTF_8);
+        httpPost.addHeader("Content-Type", contentType);
 
         return httpPost;
     }
 
-    protected String doPost(HttpPost httpPost, List<NameValuePair> nvps) throws IOException {
+    protected String doPost(final HttpPost httpPost) throws IOException {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         // 执行请求
         HttpResponse response = httpClient.execute(httpPost);
         String result = EntityUtils.toString(response.getEntity(), "utf-8");
         LOGGER.info(result);
-        Integer code = (Integer)JSON.parseObject(result).get("code");
-        if (200 == code) {
-            return result;
-        }
-        LOGGER.error("\n201 -- 客户端版本不对，需升级sdk\n" +
-                "301 -- 被封禁\n" +
-                "302 -- 用户名或密码错误\n" +
-                "315 -- IP限制\n" +
-                "403 -- 非法操作或没有权限\n" +
-                "404 -- 对象不存在\n" +
-                "405 -- 参数长度过长\n" +
-                "406 -- 对象只读\n" +
-                "408 -- 客户端请求超时\n" +
-                "413 -- 验证失败(短信服务)\n" +
-                "414 -- 参数错误\n" +
-                "415 -- 客户端网络问题\n" +
-                "416 -- 频率控制\n" +
-                "417 -- 重复操作\n" +
-                "418 -- 通道不可用(短信服务)\n" +
-                "419 -- 数量超过上限\n" +
-                "422 -- 账号被禁用\n" +
-                "431 -- HTTP重复请求\n" +
-                "500 -- 服务器内部错误\n" +
-                "503 -- 服务器繁忙\n" +
-                "508 -- 消息撤回时间超限\n" +
-                "509 -- 无效协议\n" +
-                "514 -- 服务不可用\n" +
-                "998 -- 解包错误\n" +
-                "999 -- 打包错误");
-        return null;
+        return result;
 
+    }
+
+    /**
+     * 获取属性名数组
+     * */
+    private String[] getFiledName(Object o){
+        Field[] fields=o.getClass().getDeclaredFields();
+        String[] fieldNames=new String[fields.length];
+        for(int i=0;i<fields.length;i++){
+            System.out.println(fields[i].getType());
+            fieldNames[i]=fields[i].getName();
+        }
+        return fieldNames;
+    }
+
+    /**
+     * 根据属性名获取属性值
+     * */
+    private Object getFieldValueByName(String fieldName, Object o) {
+        try {
+            String firstLetter = fieldName.substring(0, 1).toUpperCase();
+            String getter = "get" + firstLetter + fieldName.substring(1);
+            Method method = o.getClass().getMethod(getter, new Class[] {});
+            Object value = method.invoke(o, new Object[] {});
+            return value;
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * 获取属性类型(type)，属性名(name)，属性值(value)的map组成的list
+     * */
+    protected List<NameValuePair> getFiledsInfo(Object o){
+        Field[] fields=o.getClass().getDeclaredFields();
+        List<NameValuePair> list = new ArrayList(16);
+        for(int i = 0; i < fields.length; i++){
+            list.add(new BasicNameValuePair(fields[i].getName(), getFieldValueByName(fields[i].getName(), o) + ""));
+        }
+        return list;
     }
 }

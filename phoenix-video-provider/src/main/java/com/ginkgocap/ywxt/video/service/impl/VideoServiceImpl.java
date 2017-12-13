@@ -7,6 +7,7 @@ import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.user.service.UserService;
 import com.ginkgocap.ywxt.video.dao.VideoDao;
 import com.ginkgocap.ywxt.video.dao.VideoEnshrineDao;
+import com.ginkgocap.ywxt.video.dto.LiveUserDTO;
 import com.ginkgocap.ywxt.video.dto.UserDTO;
 import com.ginkgocap.ywxt.video.model.TbVideo;
 import com.ginkgocap.ywxt.video.model.TbVideoEnshrine;
@@ -137,6 +138,20 @@ public class VideoServiceImpl extends BaseServiceImpl implements VideoService {
         result.put("page", page);
         result.put("results", list);
         return result;
+    }
+
+    @Override
+    public LiveUserDTO getLiveUserDTO(Long userId) {
+        User user = handleUserPicPath(userId);
+        if (null != user) {
+            LiveUserDTO liveUserDTO = new LiveUserDTO();
+            liveUserDTO.setId(user.getId());
+            liveUserDTO.setName(user.getName());
+            liveUserDTO.setPicPath(user.getPicPath());
+            liveUserDTO.setVirtual(user.isVirtual());
+            return liveUserDTO;
+        }
+        return null;
     }
 
 

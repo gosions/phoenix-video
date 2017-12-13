@@ -1,5 +1,6 @@
 package com.ginkgocap.ywxt.video.service;
 
+import com.ginkgocap.ywxt.video.dto.LiveUserDTO;
 import com.ginkgocap.ywxt.video.model.TbVideo;
 import com.ginkgocap.ywxt.video.utils.QueryReqBean;
 
@@ -19,4 +20,6 @@ public interface VideoService {
     TbVideo updateVideo(TbVideo tbVideo);
 
     Map<String, Object> selectSearchPage(QueryReqBean queryReqBean);
+
+    LiveUserDTO getLiveUserDTO(final Long userId);
 }

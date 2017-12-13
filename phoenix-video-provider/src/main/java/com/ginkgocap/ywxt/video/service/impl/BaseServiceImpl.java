@@ -25,7 +25,7 @@ public class BaseServiceImpl implements BaseService{
 
     @Override
     public User handleUserPicPath(Long userId) {
-        User user = userService.findUserByUserId(userId);
+        User user = userService.getUserById(userId);
         if(null != user) {
             if(null != user.getPicPath()) {
                 if ( !user.getPicPath().contains("http")) {
