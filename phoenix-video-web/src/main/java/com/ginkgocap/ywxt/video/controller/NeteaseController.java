@@ -46,7 +46,7 @@ public class NeteaseController {
     /**
      *******************************************************************************************************************
      */
-    @ApiOperation(value = "创建网易云通信ID", notes = "")
+    @ApiOperation(value = "创建网易云通信ID", notes = "http://dev.netease.im/docs/product/IM即时通讯/服务端API文档/网易云通信ID?#创建网易云通信ID")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "accId", value = "网易云通信ID，最大长度32字符，必须保证一个,APP内唯一（只允许字母、数字、半角下划线_、@、半角点以及半角-组成，不区分大小写，会统一小写处理",
                     required = true, dataType = "String", paramType = "path"),
@@ -58,7 +58,7 @@ public class NeteaseController {
        return neteaseManager.createAccount(accId, token);
     }
 
-    @ApiOperation(value = "更新并获取新token", notes = "")
+    @ApiOperation(value = "更新并获取新token", notes = "http://dev.netease.im/docs/product/IM即时通讯/服务端API文档/网易云通信ID?#更新并获取新token")
     @ApiImplicitParam(name = "accid", value = "网易云通信ID，最大长度32字符，必须保证一个APP内唯一", required = true, dataType = "ChatRoomMsg")
     @RequestMapping(value = { "/user/refreshToken/{accId}" }, method = { RequestMethod.POST })
     public String refreshToken(@PathVariable("accId") String accId) {
@@ -68,7 +68,7 @@ public class NeteaseController {
     /**
      *******************************************************************************************************************
      */
-    @ApiOperation(value = "创建聊天室", notes = "")
+    @ApiOperation(value = "创建聊天室", notes = "http://dev.netease.im/docs/product/IM即时通讯/服务端API文档/聊天室?#创建聊天室")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "creator", value = "聊天室属主的账号accid", required = true, dataType = "String", paramType = "path"),
             @ApiImplicitParam(name = "roomName", value = "聊天室名称，长度限制128个字符", required = true, dataType = "String", paramType = "path")
@@ -78,7 +78,7 @@ public class NeteaseController {
         return neteaseManager.createChatRoom(creator, roomName);
     }
 
-    @ApiOperation(value = "请求聊天室地址", notes = "加入到聊天室")
+    @ApiOperation(value = "请求聊天室地址", notes = "http://dev.netease.im/docs/product/IM即时通讯/服务端API文档/聊天室?#请求聊天室地址")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "roomId", value = "聊天室id", required = true, dataType = "Long", paramType = "path"),
             @ApiImplicitParam(name = "accId", value = "进入聊天室的账号", required = true, dataType = "String", paramType = "path"),
@@ -92,7 +92,7 @@ public class NeteaseController {
         return neteaseManager.requestAddr(roomId, accId, clientType);
     }
 
-    @ApiOperation(value="发送聊天室消息", notes="")
+    @ApiOperation(value="发送聊天室消息", notes="http://dev.netease.im/docs/product/IM即时通讯/服务端API文档/聊天室?#发送聊天室消息")
     @ApiImplicitParam(name = "chatRoomMsg", value = "详细实体ChatRoomMsgo", required = true, dataType = "ChatRoomMsg")
     @RequestMapping(value = { "/chatroom/sendMsg" }, method = { RequestMethod.PUT })
     public String sendMsg(@RequestBody ChatRoomMsg chatRoomMsg) {
@@ -109,7 +109,7 @@ public class NeteaseController {
         return neteaseManager.getChatRoomInfo(roomId, needOnlineUserCount);
     }
 
-    @ApiOperation(value = "分页获取成员列表", notes = "")
+    @ApiOperation(value = "分页获取成员列表", notes = "http://dev.netease.im/docs/product/IM即时通讯/服务端API文档/聊天室?#分页获取成员列表")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "roomId", value = "聊天室id", required = true, dataType = "Long", paramType = "path"),
             @ApiImplicitParam(name = "type", value = "需要查询的成员类型,0:固定成员;1:非固定成员;2:仅返回在线的固定成员", required = true, dataType = "int", paramType = "path"),
@@ -126,7 +126,7 @@ public class NeteaseController {
     }
 
     @ApiIgnore
-    @ApiOperation(value = "查询聊天室统计指标TopN", notes = "")
+    @ApiOperation(value = "查询聊天室统计指标TopN", notes = "http://dev.netease.im/docs/product/IM即时通讯/服务端API文档/聊天室?#查询聊天室统计指标TopN")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "topN", value = "topn值，可选值 1~500，默认值100", required = true, dataType = "int", paramType = "path"),
             @ApiImplicitParam(name = "timestamp", value = "需要查询的指标所在的时间坐标点，不提供则默认当前时间，单位秒/毫秒皆可", required = true, dataType = "long", paramType = "path"),
@@ -142,7 +142,7 @@ public class NeteaseController {
         return neteaseManager.topN(topN, timestamp, period, orderBy);
     }
 
-    @ApiOperation(value = "聊天室云端历史消息查询", notes = "")
+    @ApiOperation(value = "聊天室云端历史消息查询", notes = "http://dev.netease.im/docs/product/IM即时通讯/服务端API文档/历史记录?kw=云端&pg=1&pid=4#聊天室云端历史消息查询")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "roomId", value = "聊天室id", required = true, dataType = "Long", paramType = "path"),
             @ApiImplicitParam(name = "accId", value = "用户账号", required = true, dataType = "String", paramType = "path"),
@@ -163,7 +163,7 @@ public class NeteaseController {
     /**
      *******************************************************************************************************************
      */
-    @ApiOperation(value = "创建一个直播频道", notes = "")
+    @ApiOperation(value = "创建一个直播频道", notes = "http://dev.netease.im/docs/product/直播/服务端API文档?pos=toc-1-0")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "name", value = "频道名称（最大长度64个字符，只支持中文、字母、数字和下划线）", required = true, dataType = "String", paramType = "path"),
             @ApiImplicitParam(name = "type", value = "频道类型（0:rtmp）", required = true, dataType = "Integer", paramType = "path")
@@ -173,14 +173,14 @@ public class NeteaseController {
         return neteaseManager.createChannel(name, type);
     }
 
-    @ApiOperation(value = "禁用频道", notes = "")
+    @ApiOperation(value = "禁用频道", notes = "http://dev.netease.im/docs/product/直播/服务端API文档?pos=toc-1-7")
     @ApiImplicitParam(name = "cid", value = "频道ID，32位字符串", required = true, dataType = "String", paramType = "path")
     @RequestMapping(value = { "/channel/pause/{cid}" }, method = { RequestMethod.POST })
     public String pauseChannel(@PathVariable("cid") String cid) {
         return neteaseManager.pauseChannel(cid);
     }
 
-    @ApiOperation(value = "获取频道状态", notes = "")
+    @ApiOperation(value = "获取频道状态", notes = "http://dev.netease.im/docs/product/直播/服务端API文档?pos=toc-1-3")
     @ApiImplicitParam(name = "cid", value = "频道ID，32位字符串", required = true, dataType = "String", paramType = "path")
     @RequestMapping(value = { "/channel/resume/{cid}" }, method = { RequestMethod.GET })
     public String resumeChannel(@PathVariable("cid") String cid) {
