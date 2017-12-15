@@ -58,7 +58,7 @@ public class VideoPlayController extends BaseController{
                 tbBusinessTrack.setMethodType(MethodTypeEnum.REQUEST_METHOD_PUT.getKey());
                 tbBusinessTrack.setUserAgent(request.getHeader("User-Agent"));
                 tbBusinessTrack.setParameter(tbVideoPlay.toString());
-                tbBusinessTrack.setGmtCreate(new Timestamp(new Date().getTime()));
+                tbBusinessTrack.setGmtCreate(new Timestamp(System.currentTimeMillis()));
                 tbBusinessTrack.setUserId(tbVideoPlay.getUserId());
                 TRACK_LOGGER.info(tbBusinessTrack.toString());
             }catch (Exception e){

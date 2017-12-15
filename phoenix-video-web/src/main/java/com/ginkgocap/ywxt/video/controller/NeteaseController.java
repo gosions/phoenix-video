@@ -50,7 +50,7 @@ public class NeteaseController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "accId", value = "网易云通信ID，最大长度32字符，必须保证一个,APP内唯一（只允许字母、数字、半角下划线_、@、半角点以及半角-组成，不区分大小写，会统一小写处理",
                     required = true, dataType = "String", paramType = "path"),
-            @ApiImplicitParam(name = "token", value = "网易云通信ID可以指定登录token值，最大长度128字符，并更新，如果未指定，会自动生成token，并在创建成功后返回",
+            @ApiImplicitParam(name = "token", value = "网易云通信ID可以指定登录token值，最大长度128字符，并更新，如果不需要指定（相应参数传null），会自动生成token，并在创建成功后返回",
                     required = true, dataType = "String", paramType = "path")
     })
     @RequestMapping(value = { "/user/create/{accId}/{token}" }, method = { RequestMethod.PUT })
@@ -59,7 +59,7 @@ public class NeteaseController {
     }
 
     @ApiOperation(value = "更新并获取新token", notes = "http://dev.netease.im/docs/product/IM即时通讯/服务端API文档/网易云通信ID?#更新并获取新token")
-    @ApiImplicitParam(name = "accid", value = "网易云通信ID，最大长度32字符，必须保证一个APP内唯一", required = true, dataType = "ChatRoomMsg")
+    @ApiImplicitParam(name = "accId", value = "网易云通信ID，最大长度32字符，必须保证一个APP内唯一", required = true, dataType = "ChatRoomMsg")
     @RequestMapping(value = { "/user/refreshToken/{accId}" }, method = { RequestMethod.POST })
     public String refreshToken(@PathVariable("accId") String accId) {
         return neteaseManager.refreshToken(accId);
@@ -73,7 +73,7 @@ public class NeteaseController {
             @ApiImplicitParam(name = "creator", value = "聊天室属主的账号accid", required = true, dataType = "String", paramType = "path"),
             @ApiImplicitParam(name = "roomName", value = "聊天室名称，长度限制128个字符", required = true, dataType = "String", paramType = "path")
     })
-    @RequestMapping(value = { "/chatroom/create/{creator}/{roomName}" }, method = { RequestMethod.POST })
+    @RequestMapping(value = { "/chatroom/create/{creator}/{roomName}" }, method = { RequestMethod.PUT })
     public String createChatRoom(@PathVariable("creator") String creator, @PathVariable("roomName") String roomName) {
         return neteaseManager.createChatRoom(creator, roomName);
     }
