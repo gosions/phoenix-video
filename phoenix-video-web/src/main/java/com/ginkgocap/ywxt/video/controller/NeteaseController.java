@@ -59,7 +59,7 @@ public class NeteaseController {
     }
 
     @ApiOperation(value = "更新并获取新token", notes = "http://dev.netease.im/docs/product/IM即时通讯/服务端API文档/网易云通信ID?#更新并获取新token")
-    @ApiImplicitParam(name = "accId", value = "网易云通信ID，最大长度32字符，必须保证一个APP内唯一", required = true, dataType = "ChatRoomMsg")
+    @ApiImplicitParam(name = "accId", value = "网易云通信ID，最大长度32字符，必须保证一个APP内唯一", required = true, dataType = "String", paramType = "path")
     @RequestMapping(value = { "/user/refreshToken/{accId}" }, method = { RequestMethod.POST })
     public String refreshToken(@PathVariable("accId") String accId) {
         return neteaseManager.refreshToken(accId);
@@ -180,10 +180,17 @@ public class NeteaseController {
         return neteaseManager.pauseChannel(cid);
     }
 
+    @ApiOperation(value = "恢复频道", notes = "http://dev.netease.im/docs/product/直播/服务端API文档?pos=toc-1-9")
+    @ApiImplicitParam(name = "cid", value = "频道ID，32位字符串", required = true, dataType = "String", paramType = "path")
+    @RequestMapping(value = { "/channel/resume/{cid}" }, method = { RequestMethod.POST })
+    public String resumeChannel(@PathVariable("cid") String cid) {
+        return neteaseManager.resumeChannel(cid);
+    }
+
     @ApiOperation(value = "获取频道状态", notes = "http://dev.netease.im/docs/product/直播/服务端API文档?pos=toc-1-3")
     @ApiImplicitParam(name = "cid", value = "频道ID，32位字符串", required = true, dataType = "String", paramType = "path")
     @RequestMapping(value = { "/channel/resume/{cid}" }, method = { RequestMethod.GET })
-    public String resumeChannel(@PathVariable("cid") String cid) {
+    public String getChannelStatus(@PathVariable("cid") String cid) {
         return neteaseManager.getChannelStatus(cid);
     }
 
