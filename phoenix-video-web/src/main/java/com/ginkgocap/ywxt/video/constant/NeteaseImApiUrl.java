@@ -73,5 +73,10 @@ public class NeteaseImApiUrl {
      */
     public static final String CHANNEL_STATS = "https://vcloud.163.com/app/channelstats";
 
+    /**
+     * 重新获取推流地址
+     */
+    public static final String CHANNEL_ADDRESS = "https://vcloud.163.com/app/address";
+
 
 }

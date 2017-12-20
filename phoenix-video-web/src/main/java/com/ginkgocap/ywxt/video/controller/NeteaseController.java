@@ -1,8 +1,13 @@
 package com.ginkgocap.ywxt.video.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.ginkgocap.ywxt.video.dto.ChatRoomMsg;
 import com.ginkgocap.ywxt.video.dto.LiveUserDTO;
+import com.ginkgocap.ywxt.video.dto.netease.InteractionMember;
+import com.ginkgocap.ywxt.video.dto.netease.InteractionMemberDTO;
+import com.ginkgocap.ywxt.video.dto.netease.NeteaseResult;
 import com.ginkgocap.ywxt.video.manager.NeteaseManager;
+import com.ginkgocap.ywxt.video.service.IRedisService;
 import com.ginkgocap.ywxt.video.service.VideoService;
 import com.gintong.frame.util.dto.CommonResultCode;
 import com.gintong.frame.util.dto.InterfaceResult;
@@ -15,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author cinderella
@@ -22,15 +29,20 @@ import javax.annotation.Resource;
  */
 @RestController
 @RequestMapping("/v1/netease")
-public class NeteaseController {
+public class NeteaseController extends BaseController{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NeteaseController.class);
+
+    private static final int RESULT_OK = 200;
 
     @Resource
     private NeteaseManager neteaseManager;
 
     @Resource
     private VideoService videoService;
+
+    @Resource
+    private IRedisService iRedisService;
 
     @ApiOperation(value = "获取用户昵称，头像", notes = "")
     @ApiImplicitParam(name = "userId", value = "userId", required = true, dataType  = "Long", paramType = "path")
@@ -53,7 +65,7 @@ public class NeteaseController {
             @ApiImplicitParam(name = "token", value = "网易云通信ID可以指定登录token值，最大长度128字符，并更新，如果不需要指定（相应参数传null），会自动生成token，并在创建成功后返回",
                     required = true, dataType = "String", paramType = "path")
     })
-    @RequestMapping(value = { "/user/create/{accId}/{token}" }, method = { RequestMethod.PUT })
+    @RequestMapping(value = { "/user/create/{accId}/{token}" }, method = { RequestMethod.POST })
     public String createAccount(@PathVariable("accId") String accId, @PathVariable("token") String token) {
        return neteaseManager.createAccount(accId, token);
     }
@@ -70,12 +82,20 @@ public class NeteaseController {
      */
     @ApiOperation(value = "创建聊天室", notes = "http://dev.netease.im/docs/product/IM即时通讯/服务端API文档/聊天室?#创建聊天室")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "creator", value = "聊天室属主的账号accid", required = true, dataType = "String", paramType = "path"),
-            @ApiImplicitParam(name = "roomName", value = "聊天室名称，长度限制128个字符", required = true, dataType = "String", paramType = "path")
+            @ApiImplicitParam(name = "creator", value = "聊天室属主的账号accid", required = true, dataType = "String", paramType = "form"),
+            @ApiImplicitParam(name = "roomName", value = "聊天室名称，长度限制128个字符", required = true, dataType = "String", paramType = "form"),
+            @ApiImplicitParam(name = "announcement", value = "公告，长度限制4096个字符", required = false, dataType = "String", paramType = "form"),
+            @ApiImplicitParam(name = "broadCastUrl", value = "直播地址，长度限制1024个字符", required = false, dataType = "String", paramType = "form"),
+            @ApiImplicitParam(name = "ext", value = "扩展字段，最长4096字符", required = false, dataType = "String", paramType = "form")
     })
-    @RequestMapping(value = { "/chatroom/create/{creator}/{roomName}" }, method = { RequestMethod.PUT })
-    public String createChatRoom(@PathVariable("creator") String creator, @PathVariable("roomName") String roomName) {
-        return neteaseManager.createChatRoom(creator, roomName);
+    @RequestMapping(value = { "/chatroom/create" }, method = { RequestMethod.POST })
+    public String createChatRoom(
+            @RequestParam(value = "creator", required = true, defaultValue = "") String creator,
+            @RequestParam(value = "roomName", required = true, defaultValue = "") String roomName,
+            @RequestParam(value = "announcement", required = false, defaultValue = "") String announcement,
+            @RequestParam(value = "broadCastUrl", required = false, defaultValue = "") String broadCastUrl,
+            @RequestParam(value = "ext", required = false, defaultValue = "") String ext) {
+        return neteaseManager.createChatRoom(creator, roomName, announcement, broadCastUrl, ext);
     }
 
     @ApiOperation(value = "请求聊天室地址", notes = "http://dev.netease.im/docs/product/IM即时通讯/服务端API文档/聊天室?#请求聊天室地址")
@@ -94,7 +114,7 @@ public class NeteaseController {
 
     @ApiOperation(value="发送聊天室消息", notes="http://dev.netease.im/docs/product/IM即时通讯/服务端API文档/聊天室?#发送聊天室消息")
     @ApiImplicitParam(name = "chatRoomMsg", value = "详细实体ChatRoomMsgo", required = true, dataType = "ChatRoomMsg")
-    @RequestMapping(value = { "/chatroom/sendMsg" }, method = { RequestMethod.PUT })
+    @RequestMapping(value = { "/chatroom/sendMsg" }, method = { RequestMethod.POST })
     public String sendMsg(@RequestBody ChatRoomMsg chatRoomMsg) {
         return neteaseManager.sendMsg(chatRoomMsg);
     }
@@ -168,7 +188,7 @@ public class NeteaseController {
             @ApiImplicitParam(name = "name", value = "频道名称（最大长度64个字符，只支持中文、字母、数字和下划线）", required = true, dataType = "String", paramType = "path"),
             @ApiImplicitParam(name = "type", value = "频道类型（0:rtmp）", required = true, dataType = "Integer", paramType = "path")
     })
-    @RequestMapping(value = { "/channel/create/{name}/{type}" }, method = { RequestMethod.PUT })
+    @RequestMapping(value = { "/channel/create/{name}/{type}" }, method = { RequestMethod.POST })
     public String createChatRoom(@PathVariable("name") String name, @PathVariable("type") Integer type) {
         return neteaseManager.createChannel(name, type);
     }
@@ -192,6 +212,76 @@ public class NeteaseController {
     @RequestMapping(value = { "/channel/resume/{cid}" }, method = { RequestMethod.GET })
     public String getChannelStatus(@PathVariable("cid") String cid) {
         return neteaseManager.getChannelStatus(cid);
+    }
+
+    @ApiOperation(value = "重新获取推流地址", notes = "http://dev.netease.im/docs/product/直播/服务端API文档?pos=toc-1-5")
+    @ApiImplicitParam(name = "cid", value = "频道ID，32位字符串", required = true, dataType = "String", paramType = "path")
+    @RequestMapping(value = { "/channel/address/{cid}" }, method = { RequestMethod.GET })
+    public String getChannelAddress(@PathVariable("cid") String cid) {
+        return neteaseManager.getChannelAddress(cid);
+    }
+
+    /**
+     *******************************************************************************************************************
+     */
+    @ApiOperation(value = "创建频道和聊天室", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "creator", value = "聊天室属主的账号accid", required = true, dataType = "String", paramType = "form"),
+            @ApiImplicitParam(name = "name", value = "频道名称（聊天室名称）", required = true, dataType = "String", paramType = "form"),
+            @ApiImplicitParam(name = "type", value = "频道类型（0:rtmp）", required = true, dataType = "int", paramType = "form"),
+            @ApiImplicitParam(name = "announcement", value = "公告，长度限制4096个字符", required = false, dataType = "String", paramType = "form"),
+            @ApiImplicitParam(name = "ext", value = "扩展字段，最长4096字符", required = false, dataType = "String", paramType = "form")
+    })
+    @RequestMapping(value = { "/hostEntrance" }, method = { RequestMethod.POST })
+    public InterfaceResult hostEntrance(
+            @RequestParam(value = "creator", required = true, defaultValue = "") String creator,
+            @RequestParam(value = "name", required = true, defaultValue = "") String name,
+            @RequestParam(value = "type", required = true, defaultValue = "0") Integer type,
+            @RequestParam(value = "announcement", required = false, defaultValue = "") String announcement,
+            @RequestParam(value = "ext", required = false, defaultValue = "") String ext) {
+        try {
+            Map<String, Object> result = new HashMap<>(2);
+            String chatRoom = "";
+            NeteaseResult neteaseResult = JSONObject.parseObject(neteaseManager.createChannel(name, type), NeteaseResult.class);
+            if (RESULT_OK == neteaseResult.getCode()) {
+                String broadCastUrl = neteaseResult.getRet().get("pushUrl").toString();
+                chatRoom = neteaseManager.createChatRoom(creator, name, announcement, broadCastUrl, ext);
+            }
+            result.put("channel", neteaseResult);
+            result.put("chatRoom", JSONObject.parseObject(chatRoom));
+            return InterfaceResult.getSuccessInterfaceResultInstance(result);
+        } catch (Exception ex) {
+            LOGGER.error("hostEntrance exception : {}", ex.getMessage());
+        }
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION);
+    }
+
+    @ApiOperation(value = "观众加入连麦", notes = "")
+    @ApiImplicitParam(name = "interactionMember", value = "详细实体InteractionMember", required = true, dataType = "InteractionMember", paramType = "body")
+    @RequestMapping(value = { "/pushMicLink/{meetingId}" }, method = { RequestMethod.GET })
+    public InterfaceResult pushMicLink(@RequestBody InteractionMemberDTO interactionMemberDTO) {
+        try {
+            long rpush = iRedisService.rpush(getMicLinkKey(interactionMemberDTO.getMeetingId()), interactionMemberDTO.getInteractionMember().toString());
+            LOGGER.info("pushMicLink : {}, rpush length : {}", interactionMemberDTO.getInteractionMember().toString(), rpush);
+            return InterfaceResult.getSuccessInterfaceResultInstance(rpush);
+        } catch (Exception ex) {
+            LOGGER.error("pushMicLink Exception : {}", ex.getMessage());
+        }
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION);
+    }
+
+    @ApiOperation(value = "从队列里面取出连麦者", notes = "")
+    @ApiImplicitParam(name = "meetingId", value = "活动（会议）Id", required = true, dataType = "Long", paramType = "path")
+    @RequestMapping(value = { "/popMicLink/{meetingId}" }, method = { RequestMethod.GET })
+    public InterfaceResult popMicLink(@PathVariable("meetingId") Long meetingId) {
+        try {
+            String lpop = iRedisService.lpop(getMicLinkKey(meetingId));
+            LOGGER.info("popMicLink : {}", lpop);
+            return InterfaceResult.getSuccessInterfaceResultInstance(JSONObject.parseObject(lpop, InteractionMember.class));
+        } catch (Exception ex) {
+            LOGGER.error("popMicLink Exception : {}", ex.getMessage());
+        }
+        return InterfaceResult.getInterfaceResultInstance(CommonResultCode.SYSTEM_EXCEPTION);
     }
 
 }

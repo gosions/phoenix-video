@@ -20,9 +20,13 @@ public class BaseController {
      * @throws IOException
      *
      */
-    public String getJsonParamStr(HttpServletRequest request) throws IOException {
+    protected String getJsonParamStr(HttpServletRequest request) throws IOException {
         String result = JsonReadUtil.getJsonIn(request);
         return result;
+    }
+
+    protected String getMicLinkKey(final long meetingId) {
+        return "meeting_live_" + meetingId;
     }
 
 }

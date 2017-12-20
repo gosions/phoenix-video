@@ -1,5 +1,6 @@
-package com.ginkgocap.ywxt.video.dto;
+package com.ginkgocap.ywxt.video.dto.netease;
 
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -11,20 +12,20 @@ import java.io.Serializable;
  */
 public class NeteaseResult implements Serializable {
 
-    private Integer code;
+    private int code;
 
     private String msg;
 
-    private Object ret;
+    private JSONObject ret;
 
     public NeteaseResult() {
     }
 
-    public Integer getCode() {
+    public int getCode() {
         return code;
     }
 
-    public void setCode(Integer code) {
+    public void setCode(int code) {
         this.code = code;
     }
 
@@ -36,11 +37,11 @@ public class NeteaseResult implements Serializable {
         this.msg = msg;
     }
 
-    public Object getRet() {
+    public JSONObject getRet() {
         return ret;
     }
 
-    public void setRet(Object ret) {
+    public void setRet(JSONObject ret) {
         this.ret = ret;
     }
 

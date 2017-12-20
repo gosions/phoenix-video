@@ -107,12 +107,20 @@ public class NeteaseManager extends BaseManager{
      * @param roomName
      * @return
      */
-    public String createChatRoom(final String creator, final String roomName) {
+    public String createChatRoom(
+            final String creator,
+            final String roomName,
+            final String announcement,
+            final String broadCastUrl,
+            final String ext) {
         HttpPost httpPost = getHeader(NeteaseImApiUrl.CREATE_CHAT_ROOM, MediaTypes.NETEASE_UTF_8);
         // 设置请求的参数
-        List<NameValuePair> nvps = new ArrayList<>(2);
+        List<NameValuePair> nvps = new ArrayList<>(5);
         nvps.add(new BasicNameValuePair("creator", creator));
         nvps.add(new BasicNameValuePair("name", roomName));
+        nvps.add(new BasicNameValuePair("announcement", announcement));
+        nvps.add(new BasicNameValuePair("broadcasturl", broadCastUrl));
+        nvps.add(new BasicNameValuePair("ext", ext));
         return getHttpPostResult(httpPost, nvps);
     }
 
@@ -265,6 +273,19 @@ public class NeteaseManager extends BaseManager{
      */
     public String getChannelStatus(final String cid) {
         HttpPost httpPost = getHeader(NeteaseImApiUrl.CHANNEL_STATS, MediaTypes.JSON_UTF_8);
+        // 设置请求的参数
+        JSONObject jsonObject = new JSONObject(1);
+        jsonObject.put("cid", cid);
+        return getHttpPostResult(httpPost, jsonObject.toJSONString());
+    }
+
+    /**
+     * 重新获取推流地址
+     * @param cid
+     * @return
+     */
+    public String getChannelAddress(final String cid) {
+        HttpPost httpPost = getHeader(NeteaseImApiUrl.CHANNEL_ADDRESS, MediaTypes.JSON_UTF_8);
         // 设置请求的参数
         JSONObject jsonObject = new JSONObject(1);
         jsonObject.put("cid", cid);
