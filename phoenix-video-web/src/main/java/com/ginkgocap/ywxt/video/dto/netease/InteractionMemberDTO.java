@@ -4,11 +4,15 @@ package com.ginkgocap.ywxt.video.dto.netease;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.io.Serializable;
+
 /**
 * @author cinderella
 * @version 2017/12/20
 */
-public class InteractionMemberDTO {
+public class InteractionMemberDTO implements Serializable{
+
+    private static final long serialVersionUID = 8348147598164128136L;
 
     private Long meetingId;
 

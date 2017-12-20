@@ -4,16 +4,24 @@ package com.ginkgocap.ywxt.video.dto.netease;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.io.Serializable;
+
 /**
- * Created by hzxuwen on 2016/7/15.
+ *
+ * @author hzxuwen
+ * @date 2016/7/15
  */
-public class InteractionMember {
+public class InteractionMember implements Serializable{
+    private static final long serialVersionUID = 923288408568636896L;
     private String account;
     private String name;
     private String avatar;
     private AVChatType avChatType;
     private boolean isSelected;
     private MicStateEnum micStateEnum;
+
+    public InteractionMember() {
+    }
 
     public InteractionMember(String account, String name, String avatar, AVChatType avChatType) {
         this.account = account;

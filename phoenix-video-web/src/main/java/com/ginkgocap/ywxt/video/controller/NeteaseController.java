@@ -248,7 +248,7 @@ public class NeteaseController extends BaseController{
                 chatRoom = neteaseManager.createChatRoom(creator, name, announcement, broadCastUrl, ext);
             }
             result.put("channel", neteaseResult);
-            result.put("chatRoom", JSONObject.parseObject(chatRoom));
+            result.put("chatRoomInfo", JSONObject.parseObject(chatRoom));
             return InterfaceResult.getSuccessInterfaceResultInstance(result);
         } catch (Exception ex) {
             LOGGER.error("hostEntrance exception : {}", ex.getMessage());
@@ -257,11 +257,11 @@ public class NeteaseController extends BaseController{
     }
 
     @ApiOperation(value = "观众加入连麦", notes = "")
-    @ApiImplicitParam(name = "interactionMember", value = "详细实体InteractionMember", required = true, dataType = "InteractionMember", paramType = "body")
-    @RequestMapping(value = { "/pushMicLink/{meetingId}" }, method = { RequestMethod.GET })
+    @ApiImplicitParam(name = "interactionMemberDTO", value = "详细实体interactionMemberDTO", required = true, dataType = "InteractionMemberDTO")
+    @RequestMapping(value = { "/pushMicLink" }, method = { RequestMethod.POST })
     public InterfaceResult pushMicLink(@RequestBody InteractionMemberDTO interactionMemberDTO) {
         try {
-            long rpush = iRedisService.rpush(getMicLinkKey(interactionMemberDTO.getMeetingId()), interactionMemberDTO.getInteractionMember().toString());
+            long rpush = iRedisService.rpush(getMicLinkKey(interactionMemberDTO.getMeetingId()), interactionMemberDTO.getInteractionMember());
             LOGGER.info("pushMicLink : {}, rpush length : {}", interactionMemberDTO.getInteractionMember().toString(), rpush);
             return InterfaceResult.getSuccessInterfaceResultInstance(rpush);
         } catch (Exception ex) {
