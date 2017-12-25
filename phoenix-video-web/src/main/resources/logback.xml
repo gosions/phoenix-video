@@ -7,7 +7,7 @@
     <property resource="logback.properties"/>
     <!--<property name="logPath" value="/home/logs${contextPath}"/>-->
     <property name="logPath" value="./logs${contextPath}"/>
-    <property name="maxHistory" value="1"/>
+    <property name="maxHistory" value="30"/>
     <property name="charset" value="UTF-8"/>
 
     <appender name="rootConsoleDebug" class="ch.qos.logback.core.ConsoleAppender">
@@ -39,7 +39,7 @@
     </appender>
 
     <!--
-    -把bimt的所有日志和其他错误级别的日志输出到console
+    -把所有日志和其他错误级别的日志输出到console
     -把所有的日志输出到rootRollingDebug
     -->
 
@@ -74,8 +74,26 @@
         </encoder>
     </appender>
 
-    <logger name="accessLog" level="info">
+    <logger name="accessLog" level="info" additivity="false">
         <appender-ref ref="accessLogAppender" />
+    </logger>
+
+    <!--Track日志-->
+    <appender name="trackLogAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logPath}/track.log</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logPath}/track/%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>${maxHistory}</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} - %msg%n</pattern>
+            <charset>${charset}</charset>
+        </encoder>
+    </appender>
+
+    <logger name="trackLog" level="info" additivity="false">
+        <appender-ref ref="trackLogAppender" />
     </logger>
 
 

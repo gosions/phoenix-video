@@ -13,6 +13,8 @@ public interface IRedisService {
 
     public String get(String key);
 
+    public abstract long del(String... keys);
+
     public boolean expire(String key, long expire);
 
     public <T> boolean setList(String key, List<T> list);

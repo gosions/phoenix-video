@@ -21,18 +21,12 @@ import java.util.Map;
  * Created by gintong on 2017/5/25.
  */
 @Service("videoEnshrineService")
-public class VideoEnshrineServiceImpl implements VideoEnshrineService {
+public class VideoEnshrineServiceImpl extends BaseServiceImpl implements VideoEnshrineService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private VideoEnshrineDao videoEnshrineDao;
-
-    @Autowired
-    private UserService userService;
-
-    @Value("${nginx.root}")
-    private String nginxRoot;
 
     @Override
     public TbVideoEnshrine insertVideoEnshrine(TbVideoEnshrine tbVideoEnshrine) {
@@ -61,13 +55,7 @@ public class VideoEnshrineServiceImpl implements VideoEnshrineService {
         List<TbVideoEnshrine> list = videoEnshrineDao.selectAllByVideoId(videoId, page.getPageStartRow(), pageSize);
         for (TbVideoEnshrine temp:list) {
             if(null != temp.getUserId()) {
-                User user = userService.findUserByUserId(temp.getUserId());
-                if(null != user) {
-                    if(null != user.getPicPath()) {
-                        user.setPicPath(nginxRoot + user.getPicPath());
-                    }
-                    temp.setUser(user);
-                }
+                temp.setUser(handleUserPicPath(temp.getUserId()));
             }
         }
         if(count<=0){

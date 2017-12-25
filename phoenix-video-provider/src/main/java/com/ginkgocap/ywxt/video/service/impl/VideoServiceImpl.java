@@ -7,6 +7,7 @@ import com.ginkgocap.ywxt.user.model.User;
 import com.ginkgocap.ywxt.user.service.UserService;
 import com.ginkgocap.ywxt.video.dao.VideoDao;
 import com.ginkgocap.ywxt.video.dao.VideoEnshrineDao;
+import com.ginkgocap.ywxt.video.dto.LiveUserDTO;
 import com.ginkgocap.ywxt.video.dto.UserDTO;
 import com.ginkgocap.ywxt.video.model.TbVideo;
 import com.ginkgocap.ywxt.video.model.TbVideoEnshrine;
@@ -28,7 +29,7 @@ import java.util.Map;
  * Created by gintong on 2017/5/25.
  */
 @Service("videoService")
-public class VideoServiceImpl implements VideoService {
+public class VideoServiceImpl extends BaseServiceImpl implements VideoService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -37,15 +38,6 @@ public class VideoServiceImpl implements VideoService {
 
     @Autowired
     private VideoEnshrineDao videoEnshrineDao;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private OrganFollowService organFollowService;
-
-    @Value("${nginx.root}")
-    private String nginxRoot;
 
     @Override
     public TbVideo insertVideo(TbVideo tbVideo) {
@@ -56,15 +48,9 @@ public class VideoServiceImpl implements VideoService {
     public TbVideo selectByPrimaryKey(Long id) {
         TbVideo tbVideo = videoDao.selectByPrimaryKey(id);
         if(null != tbVideo && null != tbVideo.getUserId()) {
-            User user = userService.findUserByUserId(tbVideo.getUserId());
-            if(null != user) {
-                UserDTO userDTO = new UserDTO();
-                if(null != user.getPicPath()) {
-                    user.setPicPath(nginxRoot + user.getPicPath());
-                }
-                userDTO.setUser(user);
-                tbVideo.setUserDTO(userDTO);
-            }
+            UserDTO userDTO = new UserDTO();
+            userDTO.setUser(handleUserPicPath(tbVideo.getUserId()));
+            tbVideo.setUserDTO(userDTO);
         }
         return tbVideo;
     }
@@ -73,15 +59,11 @@ public class VideoServiceImpl implements VideoService {
     public TbVideo selectByPrimaryKeyAndPersonId(Long id, Long personId) {
         TbVideo tbVideo = videoDao.selectByPrimaryKey(id);
         if(null != tbVideo && null != tbVideo.getUserId()) {
-            User user = userService.findUserByUserId(tbVideo.getUserId());
+            User user = handleUserPicPath(tbVideo.getUserId());
             if(null != user) {
                 UserDTO userDTO = new UserDTO();
-                if(null != user.getPicPath()) {
-                    user.setPicPath(nginxRoot + user.getPicPath());
-                }
                 if(user.isVirtual()){
-                    boolean flag = organFollowService.whetherExist(user.getId(), Long.parseLong(personId.toString()));
-                    userDTO.setIsfollow(flag);
+                    userDTO.setIsfollow(isFollowOrganization(user.getId(), personId));
                 }
                 //是否收藏该视频
                 TbVideoEnshrine tbVideoEnshrine = videoEnshrineDao.selectByUserIdAndVideoId(Long.parseLong(personId.toString()), tbVideo.getId());
@@ -119,12 +101,9 @@ public class VideoServiceImpl implements VideoService {
         List<TbVideo> list = videoDao.selectSearch(mapParam);
         for (TbVideo temp:list) {
             if(null != temp.getUserId()) {
-                User user = userService.findUserByUserId(temp.getUserId());
+                User user = handleUserPicPath(temp.getUserId());
                 if(null != user) {
                     UserDTO userDTO = new UserDTO();
-                    if(null != user.getPicPath()) {
-                        user.setPicPath(nginxRoot + user.getPicPath());
-                    }
                     userDTO.setUser(user);
                     //个人用户
                     Object personId = mapParam.get("personId");
@@ -132,7 +111,7 @@ public class VideoServiceImpl implements VideoService {
                     if(null != personId && !"".equals(personId)) {
                         //是否关注组织
                         if(user.isVirtual()){
-                            boolean flag = organFollowService.whetherExist(user.getId(), Long.parseLong(personId.toString()));
+                            boolean flag = isFollowOrganization(user.getId(), Long.parseLong(personId.toString()));
                             logger.info("是否关注flag={}", flag);
                             if(user.getId() == Long.parseLong(personId.toString())) {
                                 flag = true;
@@ -159,6 +138,20 @@ public class VideoServiceImpl implements VideoService {
         result.put("page", page);
         result.put("results", list);
         return result;
+    }
+
+    @Override
+    public LiveUserDTO getLiveUserDTO(Long userId) {
+        User user = handleUserPicPath(userId);
+        if (null != user) {
+            LiveUserDTO liveUserDTO = new LiveUserDTO();
+            liveUserDTO.setId(user.getId());
+            liveUserDTO.setName(user.getName());
+            liveUserDTO.setPicPath(user.getPicPath());
+            liveUserDTO.setVirtual(user.isVirtual());
+            return liveUserDTO;
+        }
+        return null;
     }
 
 

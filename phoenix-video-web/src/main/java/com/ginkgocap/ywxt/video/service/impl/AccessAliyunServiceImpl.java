@@ -22,12 +22,16 @@ import com.aliyuncs.vod.model.v20170321.*;
 import com.ginkgocap.ywxt.video.dto.VideoDTO;
 import com.ginkgocap.ywxt.video.model.TbVideo;
 import com.ginkgocap.ywxt.video.service.AccessAliyunService;
+import com.ginkgocap.ywxt.video.service.IRedisService;
+import com.ginkgocap.ywxt.video.utils.JSONUtil;
 import com.ginkgocap.ywxt.video.utils.oss.OSSConfigure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
 
 /**
  * Created by gintong on 2017/6/16.
@@ -37,6 +41,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class AccessAliyunServiceImpl implements AccessAliyunService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AccessAliyunServiceImpl.class);
+
+    private static final long EXPIRE = 1 * 30 * 60;
+
+    @Resource
+    private IRedisService iRedisService;
 
     private static final long AUTH_TIMEOUT = 3600L;
 
@@ -191,7 +200,17 @@ public class AccessAliyunServiceImpl implements AccessAliyunService {
         req.setVideoId(videoId);
         GetVideoInfoResponse res = null;
         try {
-            res = vodClient.getAcsResponse(req);
+            String s = iRedisService.get(videoId);
+            LOGGER.info("先从redis中获取，s = {}", s);
+            if(null == s) {
+                res = vodClient.getAcsResponse(req);
+                if (null != res.getVideo() && "Normal".equals(res.getVideo().getStatus())) {
+                    s = JSONUtil.toJson(res);
+                    iRedisService.set(videoId, s, EXPIRE);
+                    LOGGER.info("放入redis中，key = {}， expire = {}", videoId, EXPIRE);
+                }
+            }
+            res = JSONUtil.toBean(s, GetVideoInfoResponse.class);
         } catch (ServerException e) {
             e.printStackTrace();
             throw new RuntimeException("GetVideoInfoRequest Server failed");
@@ -221,6 +240,12 @@ public class AccessAliyunServiceImpl implements AccessAliyunService {
         UpdateVideoInfoResponse res = null;
         try {
             res = vodClient.getAcsResponse(req);
+            GetVideoInfoResponse videoInfo = getVideoInfo(videoDTO.getAliyunVideoId());
+            if (null != videoInfo && "Normal".equals(videoInfo.getVideo().getStatus())) {
+                iRedisService.del(videoDTO.getAliyunVideoId());
+                iRedisService.set(videoDTO.getAliyunVideoId(), JSONUtil.toJson(res), EXPIRE);
+                LOGGER.info("更新redis，key = {}， expire = {}", videoDTO.getAliyunVideoId(), EXPIRE);
+            }
         } catch (ServerException e) {
             e.printStackTrace();
             throw new RuntimeException("UpdateVideoInfoRequest Server failed");
@@ -245,6 +270,8 @@ public class AccessAliyunServiceImpl implements AccessAliyunService {
         DeleteVideoResponse res = null;
         try {
             res = vodClient.getAcsResponse(req);
+            LOGGER.info("删除redis，key = {}", videoIds);
+            iRedisService.del(videoIds);
         } catch (ServerException e) {
             e.printStackTrace();
             throw new RuntimeException("DeleteVideoRequest Server failed");
