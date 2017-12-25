@@ -209,7 +209,7 @@ public class NeteaseController extends BaseController{
 
     @ApiOperation(value = "获取频道状态", notes = "http://dev.netease.im/docs/product/直播/服务端API文档?pos=toc-1-3")
     @ApiImplicitParam(name = "cid", value = "频道ID，32位字符串", required = true, dataType = "String", paramType = "path")
-    @RequestMapping(value = { "/channel/resume/{cid}" }, method = { RequestMethod.GET })
+    @RequestMapping(value = { "/channel/channelstats/{cid}" }, method = { RequestMethod.GET })
     public String getChannelStatus(@PathVariable("cid") String cid) {
         return neteaseManager.getChannelStatus(cid);
     }
